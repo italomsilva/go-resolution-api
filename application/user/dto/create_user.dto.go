@@ -1,6 +1,7 @@
-package userDto
+package dto
 
-import "go-resolution-api/model"
+import "go-resolution-api/application/user/model"
+
 
 type ReqCreateUser struct {
 	ID string `json:"id"`

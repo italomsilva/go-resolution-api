@@ -1,12 +1,10 @@
 package main
 
 import (
-	"go-resolution-api/controller"
+	userMain "go-resolution-api/application/user"
 	"go-resolution-api/database"
-	"go-resolution-api/repository"
-	"go-resolution-api/router"
-	"go-resolution-api/usecase"
 	"log"
+
 	"github.com/joho/godotenv"
 )
 
@@ -20,11 +18,7 @@ func main() {
 	if databaseConnection == nil {
 		panic("Error opening connection to the database")
 	}
-	
-	UserRepository := repository.NewUserRepository(databaseConnection)
-	UserUseCase := usecase.NewUserUseCase(UserRepository)
-	UserController := controller.NewUserController(UserUseCase)
 
-	router.InitializeRoutes(&UserController)
+	userMain.InitializeModule(databaseConnection)
 	
 }

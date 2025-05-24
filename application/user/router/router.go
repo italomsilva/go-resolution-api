@@ -1,7 +1,7 @@
 package router
 
 import (
-	"go-resolution-api/controller"
+	"go-resolution-api/application/user/controller"
 	"go-resolution-api/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -10,6 +10,7 @@ import (
 func InitializeRoutes(userController *controller.UserController){
 	router := gin.Default()
 	routes := router.Group("/api")
+	routes.Use(middleware.ApiKeyMiddleware())
 	{
 		routes.GET("/users", userController.GetUsers)
 		routes.GET("/user/:id", userController.GetUserById)
@@ -20,6 +21,7 @@ func InitializeRoutes(userController *controller.UserController){
 
 	protected := router.Group("/api")
 	protected.Use(middleware.JWTAuthMiddleware())
+	routes.Use(middleware.ApiKeyMiddleware())
 	{
 		protected.PUT("/user", userController.UpdateUser)
 		protected.DELETE("/user", userController.DeleteAccount)

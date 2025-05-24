@@ -1,4 +1,4 @@
-package userDto
+package dto
 
 type ReqLogin struct {
 	Login string `json:"login"`

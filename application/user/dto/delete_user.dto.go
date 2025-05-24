@@ -1,4 +1,4 @@
-package userDto
+package dto
 
 type ReqDeleteUser struct {
 	Login string `json:"login"`

@@ -3,8 +3,8 @@ package repository
 import (
 	"database/sql"
 	"fmt"
-	"go-resolution-api/dto/user"
-	"go-resolution-api/model"
+	"go-resolution-api/application/user/dto"
+	"go-resolution-api/application/user/model"
 )
 
 type UserRepository struct {
@@ -111,7 +111,7 @@ func (userRepository *UserRepository) GetUserByDocument(document string) (*model
 	return &result[0], nil
 }
 
-func (userRepository *UserRepository) CreateUser(input *userDto.ReqCreateUser) (*model.User, error) {
+func (userRepository *UserRepository) CreateUser(input *dto.ReqCreateUser) (*model.User, error) {
 	query := `INSERT INTO "user" (id, name, document, profile, login, password, token)
 			  VALUES ($1, $2, $3, $4, $5, $6, $7)
 			  RETURNING id`
@@ -139,7 +139,7 @@ func (userRepository *UserRepository) CreateUser(input *userDto.ReqCreateUser) (
 	return result, nil
 }
 
-func (userRepository *UserRepository) UpdateUser(id string, data *userDto.ReqUpdateUser) (*model.User, error) {
+func (userRepository *UserRepository) UpdateUser(id string, data *dto.ReqUpdateUser) (*model.User, error) {
 	query := `
 	UPDATE "user"
 	SET name = $1,

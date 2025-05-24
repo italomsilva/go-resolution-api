@@ -1,12 +1,11 @@
 package controller
 
 import (
-	"go-resolution-api/dto/response"
-	userDto "go-resolution-api/dto/user"
-	"go-resolution-api/model"
-	"go-resolution-api/usecase"
+	"go-resolution-api/application/user/dto"
+	"go-resolution-api/application/user/model"
+	"go-resolution-api/application/user/usecase"
+	"go-resolution-api/response"
 	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -36,7 +35,7 @@ func (controller *UserController) GetUserById(ctx *gin.Context) {
 }
 
 func (controller *UserController) CreateUser(ctx *gin.Context) {
-	input := userDto.NewReqCreateUser()
+	input := dto.NewReqCreateUser()
 	err := ctx.BindJSON(&input)
 	if err != nil {
 		response.SendError(ctx, http.StatusBadRequest, "Invalid request body")
@@ -50,7 +49,7 @@ func (controller *UserController) CreateUser(ctx *gin.Context) {
 }
 
 func (controller *UserController) Login(ctx *gin.Context) {
-	input := userDto.NewReqLogin()
+	input := dto.NewReqLogin()
 	err := ctx.BindJSON(&input)
 	if err != nil {
 		response.SendError(ctx, http.StatusBadRequest, "Invalid request body")
@@ -64,7 +63,7 @@ func (controller *UserController) Login(ctx *gin.Context) {
 }
 
 func (controller *UserController) UpdateUser(ctx *gin.Context) {
-	input := userDto.NewReqUpdateUser(&model.User{})
+	input := dto.NewReqUpdateUser(&model.User{})
 	err := ctx.BindJSON(&input)
 	if err != nil {
 		response.SendError(ctx, http.StatusBadRequest, "Invalid request body")
@@ -78,7 +77,7 @@ func (controller *UserController) UpdateUser(ctx *gin.Context) {
 }
 
 func (controller *UserController) DeleteAccount(ctx *gin.Context) {
-	input := userDto.NewReqDeleteUser()
+	input := dto.NewReqDeleteUser()
 	err := ctx.BindJSON(&input)
 	if err != nil {
 		response.SendError(ctx, http.StatusBadRequest, "Invalid request body")

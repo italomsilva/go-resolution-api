@@ -1,6 +1,7 @@
-package userDto
+package dto
 
-import "go-resolution-api/model"
+import "go-resolution-api/application/user/model"
+
 
 type ReqUpdateUser struct {
 	Name     *string `json:"name"`
