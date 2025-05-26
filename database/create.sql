@@ -23,7 +23,7 @@ CREATE TABLE problem (
     id UUID PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT,
-    localization TEXT,
+    location TEXT,
     status INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_id UUID,

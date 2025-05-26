@@ -1,10 +1,12 @@
 package main
 
 import (
+	problemMain "go-resolution-api/application/problems"
 	"go-resolution-api/application/user"
 	"go-resolution-api/database"
 	"log"
 
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -18,7 +20,9 @@ func main() {
 	if databaseConnection == nil {
 		panic("Error opening connection to the database")
 	}
-
-	userMain.InitializeModule(databaseConnection)
-	
+	router := gin.Default()
+	problemMain.InitializeModule(databaseConnection, router)
+	userMain.InitializeModule(databaseConnection, router)
+		
+	router.Run(":3060")
 }

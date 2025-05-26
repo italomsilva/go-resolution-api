@@ -7,8 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitializeRoutes(userController *controller.UserController){
-	router := gin.Default()
+func InitializeRoutes(userController *controller.UserController, router *gin.Engine){
 	routes := router.Group("/api")
 	routes.Use(middleware.ApiKeyMiddleware())
 	{
@@ -21,12 +20,9 @@ func InitializeRoutes(userController *controller.UserController){
 
 	protected := router.Group("/api")
 	protected.Use(middleware.JWTAuthMiddleware())
-	routes.Use(middleware.ApiKeyMiddleware())
+	protected.Use(middleware.ApiKeyMiddleware())
 	{
 		protected.PUT("/user", userController.UpdateUser)
 		protected.DELETE("/user", userController.DeleteAccount)
 	}
-	
-	router.Run(":3060")
-
 }
