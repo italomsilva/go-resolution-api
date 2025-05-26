@@ -3,7 +3,6 @@ package repository
 import (
 	"database/sql"
 	"fmt"
-	"go-resolution-api/application/user/dto"
 	"go-resolution-api/application/user/model"
 )
 
@@ -112,7 +111,7 @@ func (userRepository *UserRepository) GetUserByDocument(document string) (*model
 	return &result[0], nil
 }
 
-func (userRepository *UserRepository) CreateUser(input *dto.ReqCreateUser) (*model.User, error) {
+func (userRepository *UserRepository) CreateUser(input *model.User) (*model.User, error) {
 	query := `INSERT INTO "user" (id, name, email, document, profile, login, password, token)
 			  VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 			  RETURNING id`
@@ -141,20 +140,26 @@ func (userRepository *UserRepository) CreateUser(input *dto.ReqCreateUser) (*mod
 	return result, nil
 }
 
-func (userRepository *UserRepository) UpdateUser(id string, data *dto.ReqUpdateUser) (*model.User, error) {
+func (userRepository *UserRepository) UpdateUser(id string, data *model.User) (*model.User, error) {
 	query := `
 	UPDATE "user"
 	SET name = $1,
-		login = $2,
-		password = $3,
-		token = $4
-	WHERE id = $5
+		email = $2,
+		document = $3,
+		profile = $4,
+		login = $5,
+		password = $6,
+		token = $7
+	WHERE id = $8
 	RETURNING id;
   `
 
 	var userId string
 	err := userRepository.connection.QueryRow(query,
 		data.Name,
+		data.Email,
+		data.Document,
+		data.Profile,
 		data.Login,
 		data.Password,
 		data.Token,
@@ -165,15 +170,14 @@ func (userRepository *UserRepository) UpdateUser(id string, data *dto.ReqUpdateU
 		return nil, err
 	}
 
-	user, err := userRepository.GetUserById(userId)
-	return user, err
+	return data, err
 
 }
 
-func (userRepository *UserRepository) DeleteUser(userID string) (bool, error) {
+func (userRepository *UserRepository) DeleteUser(id string) (bool, error) {
 	query := `DELETE FROM "user" WHERE id = $1`
 
-	_, err := userRepository.connection.Exec(query, userID)
+	_, err := userRepository.connection.Exec(query, id)
 	if err != nil {
 		fmt.Println("Error deleting user:", err)
 		return false, err

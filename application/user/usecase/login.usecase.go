@@ -26,11 +26,9 @@ func (usecase *UserUseCase) Login(ctx *gin.Context, input *dto.ReqLogin) (*model
 	newToken, err := gateway.GenerateJWT(user.ID)
 	if err != nil {
 		response.SendError(ctx, http.StatusBadGateway, "Gateway error: jwt")
-		return nil, nil
+		return nil, err
 	}
-
 	user.Token = newToken
-	updatedUser := dto.NewReqUpdateUser(user)
-	return usecase.userRepository.UpdateUser(user.ID, &updatedUser)
 
+	return usecase.userRepository.UpdateUser(user.ID, user)
 }

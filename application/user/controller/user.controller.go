@@ -2,7 +2,6 @@ package controller
 
 import (
 	"go-resolution-api/application/user/dto"
-	"go-resolution-api/application/user/model"
 	"go-resolution-api/application/user/usecase"
 	"go-resolution-api/response"
 	"net/http"
@@ -63,7 +62,7 @@ func (controller *UserController) Login(ctx *gin.Context) {
 }
 
 func (controller *UserController) UpdateUser(ctx *gin.Context) {
-	input := dto.NewReqUpdateUser(&model.User{})
+	input := dto.NewReqUpdateUser()
 	err := ctx.BindJSON(&input)
 	if err != nil {
 		response.SendError(ctx, http.StatusBadRequest, "Invalid request body")

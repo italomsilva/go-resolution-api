@@ -10,3 +10,10 @@ type User struct {
 	Password string `json:"password"`
 	Token string `json:"token"`
 }
+
+func NewUser() User{
+	return User{
+		Profile: Individual,
+		Token: "",
+	}
+}
