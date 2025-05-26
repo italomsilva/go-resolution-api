@@ -1,7 +1,7 @@
 package main
 
 import (
-	userMain "go-resolution-api/application/user"
+	"go-resolution-api/application/user"
 	"go-resolution-api/database"
 	"log"
 

@@ -22,6 +22,7 @@ func (userRepository *UserRepository) fromDatabase(rows *sql.Rows) []model.User 
 		err := rows.Scan(
 			&userObj.ID,
 			&userObj.Name,
+			&userObj.Email,
 			&userObj.Document,
 			&userObj.Profile,
 			&userObj.Login,
@@ -112,14 +113,15 @@ func (userRepository *UserRepository) GetUserByDocument(document string) (*model
 }
 
 func (userRepository *UserRepository) CreateUser(input *dto.ReqCreateUser) (*model.User, error) {
-	query := `INSERT INTO "user" (id, name, document, profile, login, password, token)
-			  VALUES ($1, $2, $3, $4, $5, $6, $7)
+	query := `INSERT INTO "user" (id, name, email, document, profile, login, password, token)
+			  VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 			  RETURNING id`
 
 	var userId string
 	err := userRepository.connection.QueryRow(query,
 		input.ID,
 		input.Name,
+		input.Email,
 		input.Document,
 		input.Profile,
 		input.Login,

@@ -26,6 +26,7 @@ func InitializeRoutes(userController *controller.UserController){
 		protected.PUT("/user", userController.UpdateUser)
 		protected.DELETE("/user", userController.DeleteAccount)
 	}
+	
 	router.Run(":3060")
 
 }

@@ -6,6 +6,7 @@ import "go-resolution-api/application/user/model"
 type ReqCreateUser struct {
 	ID string `json:"id"`
 	Name string `json:"name"`
+	Email string `json:"email"`
 	Document string `json:"document"`
 	Profile model.Profile `json:"profile"`
 	Login string `json:"login"`

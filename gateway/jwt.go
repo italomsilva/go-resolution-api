@@ -3,7 +3,6 @@ package gateway
 import (
 	"errors"
 	"time"
-
 	"github.com/golang-jwt/jwt/v5"
 )
 
