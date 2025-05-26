@@ -1,10 +1,11 @@
 package usecase
 
 import (
-	"fmt"
 	"go-resolution-api/application/user/dto"
 	"go-resolution-api/response"
+	"go-resolution-api/utils"
 	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,8 +22,7 @@ func (usecase *UserUseCase) DeleteUser(ctx *gin.Context, input *dto.ReqDeleteUse
 		return &responseDelete, err
 	}
 
-	userIdToken, _ := ctx.Get("userId")
-	userId := fmt.Sprintf("%v", userIdToken)
+	userId, _ := utils.GetUserId(ctx)
 	if userId != userLogin.ID {
 		response.SendError(ctx, http.StatusBadRequest, "Invalid login or password")
 		return &responseDelete, err

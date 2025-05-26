@@ -1,22 +1,21 @@
 package usecase
 
 import (
-	"fmt"
 	"go-resolution-api/application/user/dto"
 	"go-resolution-api/application/user/model"
 	"go-resolution-api/response"
+	"go-resolution-api/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (usecase *UserUseCase) UpdateUser(ctx *gin.Context, input *dto.ReqUpdateUser) (*model.User, error) {
-	userIdToken, exists := ctx.Get("userId")
+	userId, exists := utils.GetUserId(ctx)
 	if !exists {
 		response.SendError(ctx, http.StatusUnauthorized, "Authentication required.")
 		return nil, nil
 	}
-	userId := fmt.Sprintf("%v", userIdToken)
 
 	user, err := usecase.userRepository.GetUserById(userId)
 	if user == nil {
