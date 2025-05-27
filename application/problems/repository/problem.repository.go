@@ -52,6 +52,23 @@ func (problemRepository *ProblemRepository) GetAllProblems() ([]model.Problem, e
 	return result, nil
 }
 
+func (problemRepository *ProblemRepository) GetAllProblemsByUserId(userID string) ([]model.Problem, error) {
+	query := `SELECT * FROM problem WHERE user_id = $1`
+	rows, err := problemRepository.connection.Query(query, userID)
+	if err != nil {
+		fmt.Println(err)
+		return []model.Problem{}, err
+	}
+
+	result := problemRepository.fromDatabase(rows)
+	if len(result) == 0 {
+		fmt.Println("Error fetch Users")
+		return []model.Problem{}, err
+	}
+
+	return result, nil
+}
+
 func (problemRepository *ProblemRepository) GetProblemById(id string) (*model.Problem, error) {
 	query := `SELECT * FROM problem WHERE id = $1`
 	rows, err := problemRepository.connection.Query(query, id)
@@ -83,7 +100,7 @@ func (problemRepository *ProblemRepository) CreateProblem(data *model.Problem) (
 		data.CreatedAt,
 		data.UserID)
 	if err != nil {
-		return nil, fmt.Errorf("problem not found")
+		return nil, err
 	}
 
 	return data, nil
@@ -105,8 +122,31 @@ func (problemRepository *ProblemRepository) UpdateProblem(id string, data *model
 		data.Status,
 		data.ID)
 	if err != nil {
-		return nil, fmt.Errorf("problem not found")
+		return nil, err
 	}
 
 	return data, nil
+}
+
+func (problemRepository *ProblemRepository) DeleteProblem(id string) (bool, error) {
+	query := `DELETE FROM problem WHERE id = $1`
+	_, err := problemRepository.connection.Query(query, id)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func (problemRepository *ProblemRepository) DeleteAllProblemsByUserId(userId string) (int, error) {
+	query := `DELETE FROM problem WHERE user_id = $1`
+	rows, err := problemRepository.connection.Exec(query, userId)
+	if err != nil {
+		return 0, err
+	}
+	deletedCounter, err := rows.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(deletedCounter), nil
 }

@@ -21,6 +21,9 @@ func InitializeRoutes(problemController *controller.ProblemController, router *g
 	{
 		protected.POST("/problem", problemController.CreateProblem)
 		protected.PUT("/problem", problemController.UpdateProblem)
+		protected.GET("/problems/user", problemController.GetAllProblemsByUserId)
+		protected.DELETE("/problem", problemController.DeleteProblem)
+		protected.DELETE("/problems/user", problemController.DeleteAllProblemsByUserId)
 	}
 
 }
