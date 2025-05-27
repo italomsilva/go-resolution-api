@@ -1,6 +1,5 @@
 package dto
 
-
 type ReqUpdateUser struct {
 	Name     *string `json:"name"`
 	Login    *string `json:"login"`

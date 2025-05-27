@@ -44,4 +44,17 @@ func (controller *ProblemController) CreateProblem(ctx *gin.Context) {
 	}
 }
 
+func (controller *ProblemController) UpdateProblem(ctx *gin.Context) {
+	body := dto.NewReqUpdateProblem()
+	err := ctx.BindJSON(&body)
+	if err != nil {
+		response.SendError(ctx, http.StatusBadRequest, "Invalid Request Body")
+	}
+	result, _ := controller.usecase.UpdateProblem(ctx, &body)
+	if result != nil {
+		response.SendSucess(ctx, http.StatusOK, result, "")
+	}
+}
+
+
 

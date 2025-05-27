@@ -88,3 +88,25 @@ func (problemRepository *ProblemRepository) CreateProblem(data *model.Problem) (
 
 	return data, nil
 }
+
+func (problemRepository *ProblemRepository) UpdateProblem(id string, data *model.Problem) (*model.Problem, error) {
+	query := `
+	UPDATE problem
+	SET
+		title = $1,
+		description = $2,
+		location = $3,
+		status = $4
+	WHERE id = $5`
+	_, err := problemRepository.connection.Query(query,
+		data.Title,
+		data.Description,
+		data.Location,
+		data.Status,
+		data.ID)
+	if err != nil {
+		return nil, fmt.Errorf("problem not found")
+	}
+
+	return data, nil
+}

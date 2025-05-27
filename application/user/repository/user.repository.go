@@ -185,4 +185,3 @@ func (userRepository *UserRepository) DeleteUser(id string) (bool, error) {
 
 	return true, nil
 }
-

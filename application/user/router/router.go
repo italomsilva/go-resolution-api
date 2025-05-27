@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitializeRoutes(userController *controller.UserController, router *gin.Engine){
+func InitializeRoutes(userController *controller.UserController, router *gin.Engine) {
 	routes := router.Group("/api")
 	routes.Use(middleware.ApiKeyMiddleware())
 	{
@@ -16,7 +16,6 @@ func InitializeRoutes(userController *controller.UserController, router *gin.Eng
 		routes.POST("/sign-up", userController.CreateUser)
 		routes.POST("/sign-in", userController.Login)
 	}
-
 
 	protected := router.Group("/api")
 	protected.Use(middleware.JWTAuthMiddleware())

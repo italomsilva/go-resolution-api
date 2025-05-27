@@ -23,7 +23,7 @@ func (usecase *UserUseCase) UpdateUser(ctx *gin.Context, input *dto.ReqUpdateUse
 		return nil, err
 	}
 
-	if input.Name == nil ||*input.Name != ""  {
+	if input.Name == nil || *input.Name != "" {
 		user.Name = *input.Name
 	}
 

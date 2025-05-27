@@ -1,7 +1,7 @@
 package main
 
 import (
-	problemMain "go-resolution-api/application/problems"
+	"go-resolution-api/application/problems"
 	"go-resolution-api/application/user"
 	"go-resolution-api/database"
 	"log"

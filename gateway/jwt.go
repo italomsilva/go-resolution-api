@@ -2,18 +2,18 @@ package gateway
 
 import (
 	"errors"
+	"os"
 	"time"
+
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtSecret = []byte(getSecret())
-
-func getSecret() string {
-	secret := "crypto"
+func getSecret() []byte {
+	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
 		panic("JWT_SECRET not set in environment variables")
 	}
-	return secret
+	return []byte(secret)
 }
 
 func GenerateJWT(userID string) (string, error) {
@@ -24,7 +24,7 @@ func GenerateJWT(userID string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(jwtSecret)
+	return token.SignedString(getSecret())
 }
 
 func ValidateJWT(tokenString string) (string, error) {
@@ -32,7 +32,7 @@ func ValidateJWT(tokenString string) (string, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
 		}
-		return jwtSecret, nil
+		return getSecret(), nil
 	})
 
 	if err != nil {

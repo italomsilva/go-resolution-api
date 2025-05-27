@@ -14,12 +14,13 @@ func InitializeRoutes(problemController *controller.ProblemController, router *g
 		routes.GET("/problems", problemController.GetAllProblems)
 		routes.GET("/problem/:id", problemController.GetProblemById)
 	}
-	
+
 	protected := router.Group("/api")
 	protected.Use(middleware.ApiKeyMiddleware())
 	protected.Use(middleware.JWTAuthMiddleware())
 	{
-		protected.POST("/problem/", problemController.CreateProblem)
+		protected.POST("/problem", problemController.CreateProblem)
+		protected.PUT("/problem", problemController.UpdateProblem)
 	}
 
 }
