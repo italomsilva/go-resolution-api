@@ -1,9 +1,8 @@
 package main
 
 import (
-	"go-resolution-api/application/problems"
-	"go-resolution-api/application/user"
 	"go-resolution-api/database"
+	"go-resolution-api/internal/di"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -20,9 +19,10 @@ func main() {
 	if databaseConnection == nil {
 		panic("Error opening connection to the database")
 	}
+
 	router := gin.Default()
-	problemMain.InitializeModule(databaseConnection, router)
-	userMain.InitializeModule(databaseConnection, router)
-		
+	
+	di.InjectDependencies(databaseConnection, router)
+
 	router.Run(":3060")
 }
