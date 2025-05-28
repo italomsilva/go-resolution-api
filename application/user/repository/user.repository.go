@@ -111,33 +111,27 @@ func (userRepository *UserRepository) GetUserByDocument(document string) (*model
 	return &result[0], nil
 }
 
-func (userRepository *UserRepository) CreateUser(input *model.User) (*model.User, error) {
-	query := `INSERT INTO "user" (id, name, email, document, profile, login, password, token)
-			  VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-			  RETURNING id`
-
-	var userId string
-	err := userRepository.connection.QueryRow(query,
-		input.ID,
-		input.Name,
-		input.Email,
-		input.Document,
-		input.Profile,
-		input.Login,
-		input.Password,
-		input.Token).Scan(&userId)
+func (userRepository *UserRepository) CreateUser(data *model.User) (*model.User, error) {
+	query := `
+	INSERT INTO "user"
+		(id, name, email, document, profile, login, password, token)
+	VALUES
+		($1, $2, $3, $4, $5, $6, $7, $8)
+	`
+	_, err:= userRepository.connection.Query(query,
+		data.ID,
+		data.Name,
+		data.Email,
+		data.Document,
+		data.Profile,
+		data.Login,
+		data.Password,
+		data.Token)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
-
-	result, err := userRepository.GetUserById(userId)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-
-	return result, nil
+	return data, nil
 }
 
 func (userRepository *UserRepository) UpdateUser(id string, data *model.User) (*model.User, error) {
