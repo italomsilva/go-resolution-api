@@ -34,12 +34,17 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 	getProblemByIdUsecase := ProblemUC.NewGetProblemByIDUsecase(problemRepository)
 	updateProblemUsecase := ProblemUC.NewUpdateProblemUsecase(problemRepository, tokenGateway)
 
+	// user usecases
 	createUserUsecase := UserUC.NewCreateUserUsecase(userRepository, tokenGateway, idGeneratorGateway, cryptorGateway)
 	loginUsecase := UserUC.NewLoginUsecase(userRepository, tokenGateway, cryptorGateway)
 	deleteUserUsecase := UserUC.NewDeleteUserUsecase(userRepository, tokenGateway, loginUsecase)
 	getUserByIdUsecase := UserUC.NewGetUserByIdUsecase(userRepository)
 	getAllUsersUsecase := UserUC.NewGetUsersUsecase(userRepository)
 	updateUserUsecase := UserUC.NewUpdateUserUsecase(userRepository, tokenGateway)
+
+	// solutions usecase
+	createSolutionUsecase := SolutionUC.NewCreateSolutionUsecase(solutionRepository, problemRepository, tokenGateway, idGeneratorGateway)
+	getAllSolutionByProblemId := SolutionUC.NewGetAllSolutionsByProblemIdUsecase(solutionRepository, problemRepository)
 
 	problemController := controller.NewProblemController(
 		tokenGateway,
@@ -60,7 +65,11 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 		loginUsecase,
 		updateUserUsecase,
 	)
-	solutionController := controller.NewSolutionController(tokenGateway)
+	solutionController := controller.NewSolutionController(
+		tokenGateway,
+		createSolutionUsecase,
+		getAllSolutionByProblemId,
+	)
 
 	authMiddleware := middleware.NewAuthMiddleware(tokenGateway)
 	apiKeyMiddleware := middleware.NewApiKeyMiddleware()
