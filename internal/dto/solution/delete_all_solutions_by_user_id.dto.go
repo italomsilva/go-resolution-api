@@ -1,6 +1,6 @@
 package dto
 
-type DeleteAllProblemsByUserIdResponse struct {
+type DeleteAllSolutionsByUserIdResponse struct {
 	Success        bool `json:"success"`
 	DeletedCounter int  `json:"deleted_counter"`
 }

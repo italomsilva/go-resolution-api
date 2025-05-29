@@ -16,7 +16,8 @@ func InitializeSolutionRoutes(
 	routes := router.Group("/api")
 	routes.Use(apiKeyMiddleware.Apply())
 	{
-		routes.GET("/solutions/:problemId", solutionController.GetAllSolutionsByProblemId)
+		routes.GET("/solutions/problem/:problemId", solutionController.GetAllSolutionsByProblemId)
+		routes.GET("/solutions/:id", solutionController.GetSolutionById)
 	}
 
 	protected := router.Group("/api")
@@ -24,6 +25,9 @@ func InitializeSolutionRoutes(
 	protected.Use(authMiddleware.Apply())
 	{
 		protected.POST("/solution", solutionController.CreateSolution)
+		protected.DELETE("/solution", solutionController.DeleteSolution)
+		protected.DELETE("/solutions/problem", solutionController.DeleteAllSolutionsByProblemId)
+		protected.DELETE("/solutions/user", solutionController.DeleteAllSolutionsByUserId)
 	}
 
 }

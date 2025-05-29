@@ -44,7 +44,11 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 
 	// solutions usecase
 	createSolutionUsecase := SolutionUC.NewCreateSolutionUsecase(solutionRepository, problemRepository, tokenGateway, idGeneratorGateway)
-	getAllSolutionByProblemId := SolutionUC.NewGetAllSolutionsByProblemIdUsecase(solutionRepository, problemRepository)
+	getAllSolutionsByProblemIdUsecase := SolutionUC.NewGetAllSolutionsByProblemIdUsecase(solutionRepository, problemRepository)
+	getSolutionByIdUsecase := SolutionUC.NewGetSolutionByIdUsecase(solutionRepository)
+	deleteSolutionUsecase := SolutionUC.NewDeleteSolutionUsecase(solutionRepository, tokenGateway)
+	deleteAllSolutionsByProblemIdUsecase := SolutionUC.NewDeleteAllSolutionsByProblemIdUsecase(solutionRepository, problemRepository, tokenGateway)
+	deleteAllSolutionsByUserIdUsecase := SolutionUC.NewDeleteAllSolutionsByUserIdUsecase(solutionRepository, userRepository)
 
 	problemController := controller.NewProblemController(
 		tokenGateway,
@@ -68,7 +72,11 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 	solutionController := controller.NewSolutionController(
 		tokenGateway,
 		createSolutionUsecase,
-		getAllSolutionByProblemId,
+		getAllSolutionsByProblemIdUsecase,
+		getSolutionByIdUsecase,
+		deleteSolutionUsecase,
+		deleteAllSolutionsByProblemIdUsecase,
+		deleteAllSolutionsByUserIdUsecase,
 	)
 
 	authMiddleware := middleware.NewAuthMiddleware(tokenGateway)

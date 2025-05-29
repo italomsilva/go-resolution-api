@@ -11,21 +11,33 @@ import (
 )
 
 type SolutionController struct {
-	tokenGateway                      gateway.TokenGateway
-	createSolutionUsecase             usecase.CreateSolutionUsecase
-	getAllSolutionsByProblemIdUsecase usecase.GetAllSolutionsByProblemIdUsecase
+	tokenGateway                         gateway.TokenGateway
+	createSolutionUsecase                usecase.CreateSolutionUsecase
+	getAllSolutionsByProblemIdUsecase    usecase.GetAllSolutionsByProblemIdUsecase
+	getSolutionByIdUsecase               usecase.GetSolutionByIdUsecase
+	deleteSolutionUsecase                usecase.DeleteSolutionUsecase
+	deleteAllSolutionsByProblemIdUsecase usecase.DeleteAllSolutionsByProblemIdUsecase
+	deleteAllSolutionsByUserIdUsecase    usecase.DeleteAllSolutionsByUserIdUsecase
 }
 
 func NewSolutionController(
 	tokenGateway gateway.TokenGateway,
 	createSolutionUsecase usecase.CreateSolutionUsecase,
 	getAllSolutionsByProblemIdUsecase usecase.GetAllSolutionsByProblemIdUsecase,
+	getSolutionByIdUsecase usecase.GetSolutionByIdUsecase,
+	deleteSolutionUsecase usecase.DeleteSolutionUsecase,
+	deleteAllSolutionsByProblemIdUsecase usecase.DeleteAllSolutionsByProblemIdUsecase,
+	deleteAllSolutionsByUserIdUsecase usecase.DeleteAllSolutionsByUserIdUsecase,
 
 ) SolutionController {
 	return SolutionController{
-		tokenGateway:                      tokenGateway,
-		createSolutionUsecase:             createSolutionUsecase,
-		getAllSolutionsByProblemIdUsecase: getAllSolutionsByProblemIdUsecase,
+		tokenGateway:                         tokenGateway,
+		createSolutionUsecase:                createSolutionUsecase,
+		getAllSolutionsByProblemIdUsecase:    getAllSolutionsByProblemIdUsecase,
+		getSolutionByIdUsecase:               getSolutionByIdUsecase,
+		deleteSolutionUsecase:                deleteSolutionUsecase,
+		deleteAllSolutionsByProblemIdUsecase: deleteAllSolutionsByProblemIdUsecase,
+		deleteAllSolutionsByUserIdUsecase:    deleteAllSolutionsByUserIdUsecase,
 	}
 }
 
@@ -48,7 +60,55 @@ func (controller *SolutionController) GetAllSolutionsByProblemId(ctx *gin.Contex
 	problemId := ctx.Param("problemId")
 	result, _ := controller.getAllSolutionsByProblemIdUsecase.Execute(ctx, problemId)
 	if result != nil {
-		response.SendSucess(ctx, http.StatusCreated, result, "")
+		response.SendSucess(ctx, http.StatusOK, result, "")
+		return
+	}
+
+}
+
+func (controller *SolutionController) GetSolutionById(ctx *gin.Context) {
+	solutionId := ctx.Param("id")
+	result, _ := controller.getSolutionByIdUsecase.Execute(ctx, solutionId)
+	if result != nil {
+		response.SendSucess(ctx, http.StatusOK, result, "")
+		return
+	}
+}
+
+func (controller *SolutionController) DeleteSolution(ctx *gin.Context) {
+	body := dto.DeleteSolutionRequest{}
+	err := ctx.BindJSON(&body)
+	if err != nil {
+		response.SendError(ctx, http.StatusBadRequest, "Invalid Request Body")
+		return
+	}
+	result, _ := controller.deleteSolutionUsecase.Execute(ctx, body.ID)
+	if result != nil {
+		response.SendSucess(ctx, http.StatusOK, result, "")
+		return
+	}
+
+}
+
+func (controller *SolutionController) DeleteAllSolutionsByProblemId(ctx *gin.Context) {
+	body := dto.DeleteAllSolutionsByProblemIdRequest{}
+	err := ctx.BindJSON(&body)
+	if err != nil {
+		response.SendError(ctx, http.StatusBadRequest, "Invalid Request Body")
+		return
+	}
+	result, _ := controller.deleteAllSolutionsByProblemIdUsecase.Execute(ctx, body.ProblemId)
+	if result != nil {
+		response.SendSucess(ctx, http.StatusOK, result, "")
+		return
+	}
+}
+
+func (controller *SolutionController) DeleteAllSolutionsByUserId(ctx *gin.Context) {
+	userId, _ := controller.tokenGateway.GetUserId(ctx)
+	result, _ := controller.deleteAllSolutionsByUserIdUsecase.Execute(ctx, userId)
+	if result != nil {
+		response.SendSucess(ctx, http.StatusOK, result, "")
 		return
 	}
 
