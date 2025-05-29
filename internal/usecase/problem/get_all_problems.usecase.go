@@ -20,5 +20,5 @@ func NewGetAllProblemsUsecase(
 
 
 func (usecase *GetAllProblemsUsecase) Execute() ([]entity.Problem, error) {
-	return usecase.problemRepository.GetAllProblems()
+	return usecase.problemRepository.GetAll()
 }

@@ -47,7 +47,7 @@ func (usecase *CreateProblemUsecase) Execute(ctx *gin.Context, input *dto.Create
 		problem.Status = *input.Status
 	}
 
-	result, err := usecase.problemRepository.CreateProblem(&problem)
+	result, err := usecase.problemRepository.Create(&problem)
 	if err != nil {
 		response.SendError(ctx, http.StatusInternalServerError, "Create Problem Error")
 		return nil, err

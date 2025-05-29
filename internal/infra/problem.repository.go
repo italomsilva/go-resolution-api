@@ -36,7 +36,7 @@ func (problemRepository *ProblemRepository) fromDatabase(rows *sql.Rows) []entit
 	return problemList
 }
 
-func (problemRepository *ProblemRepository) GetAllProblems() ([]entity.Problem, error) {
+func (problemRepository *ProblemRepository) GetAll() ([]entity.Problem, error) {
 	query := `SELECT * FROM problem`
 	rows, err := problemRepository.connection.Query(query)
 	if err != nil {
@@ -53,7 +53,7 @@ func (problemRepository *ProblemRepository) GetAllProblems() ([]entity.Problem, 
 	return result, nil
 }
 
-func (problemRepository *ProblemRepository) GetAllProblemsByUserId(userID string) ([]entity.Problem, error) {
+func (problemRepository *ProblemRepository) GetAllByUserId(userID string) ([]entity.Problem, error) {
 	query := `SELECT * FROM problem WHERE user_id = $1`
 	rows, err := problemRepository.connection.Query(query, userID)
 	if err != nil {
@@ -70,7 +70,7 @@ func (problemRepository *ProblemRepository) GetAllProblemsByUserId(userID string
 	return result, nil
 }
 
-func (problemRepository *ProblemRepository) GetProblemById(id string) (*entity.Problem, error) {
+func (problemRepository *ProblemRepository) GetById(id string) (*entity.Problem, error) {
 	query := `SELECT * FROM problem WHERE id = $1`
 	rows, err := problemRepository.connection.Query(query, id)
 	if err != nil {
@@ -86,7 +86,7 @@ func (problemRepository *ProblemRepository) GetProblemById(id string) (*entity.P
 	return &result[0], nil
 }
 
-func (problemRepository *ProblemRepository) CreateProblem(data *entity.Problem) (*entity.Problem, error) {
+func (problemRepository *ProblemRepository) Create(data *entity.Problem) (*entity.Problem, error) {
 	query := `
 	INSERT INTO problem
 		(id, title, description, location, status, created_at, user_id)
@@ -107,7 +107,7 @@ func (problemRepository *ProblemRepository) CreateProblem(data *entity.Problem) 
 	return data, nil
 }
 
-func (problemRepository *ProblemRepository) UpdateProblem(id string, data *entity.Problem) (*entity.Problem, error) {
+func (problemRepository *ProblemRepository) Update(id string, data *entity.Problem) (*entity.Problem, error) {
 	query := `
 	UPDATE problem
 	SET
@@ -129,7 +129,7 @@ func (problemRepository *ProblemRepository) UpdateProblem(id string, data *entit
 	return data, nil
 }
 
-func (problemRepository *ProblemRepository) DeleteProblem(id string) (bool, error) {
+func (problemRepository *ProblemRepository) Delete(id string) (bool, error) {
 	query := `DELETE FROM problem WHERE id = $1`
 	_, err := problemRepository.connection.Query(query, id)
 	if err != nil {
@@ -138,7 +138,7 @@ func (problemRepository *ProblemRepository) DeleteProblem(id string) (bool, erro
 	return true, nil
 }
 
-func (problemRepository *ProblemRepository) DeleteAllProblemsByUserId(userId string) (int, error) {
+func (problemRepository *ProblemRepository) DeleteAllByUserId(userId string) (int, error) {
 	query := `DELETE FROM problem WHERE user_id = $1`
 	rows, err := problemRepository.connection.Exec(query, userId)
 	if err != nil {

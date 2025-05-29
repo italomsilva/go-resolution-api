@@ -35,7 +35,7 @@ func (usecase *UpdateProblemUsecase) Execute(ctx *gin.Context, input *dto.Update
 		return nil, fmt.Errorf("authentication required")
 	}
 
-	problem, err := usecase.problemRepository.GetProblemById(input.ID)
+	problem, err := usecase.problemRepository.GetById(input.ID)
 	if err != nil {
 		response.SendError(ctx, http.StatusNotFound, "Problem Not Found")
 		return nil, err
@@ -57,7 +57,7 @@ func (usecase *UpdateProblemUsecase) Execute(ctx *gin.Context, input *dto.Update
 		problem.Status = *input.Status
 	}
 
-	result, err := usecase.problemRepository.UpdateProblem(problem.ID, problem)
+	result, err := usecase.problemRepository.Update(problem.ID, problem)
 	if err != nil {
 		response.SendError(ctx, http.StatusInternalServerError, "update problem error")
 		return nil, err

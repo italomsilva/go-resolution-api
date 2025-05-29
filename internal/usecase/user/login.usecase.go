@@ -30,7 +30,7 @@ func NewLoginUsecase(
 
 
 func (usecase *LoginUsecase) Execute(ctx *gin.Context, input *dto.LoginRequest) (*entity.User, error) {
-	user, _ := usecase.userRepository.GetUserByLogin(input.Login)
+	user, _ := usecase.userRepository.GetByLogin(input.Login)
 	if user == nil {
 		response.SendError(ctx, http.StatusBadRequest, "Invalid login or password")
 		return nil, nil
@@ -49,5 +49,5 @@ func (usecase *LoginUsecase) Execute(ctx *gin.Context, input *dto.LoginRequest) 
 	}
 	user.Token = newToken
 
-	return usecase.userRepository.UpdateUser(user.ID, user)
+	return usecase.userRepository.Update(user.ID, user)
 }

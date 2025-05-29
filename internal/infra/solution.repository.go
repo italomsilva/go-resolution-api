@@ -13,6 +13,9 @@ type SolutionRepository struct {
 func NewSolutionRepository(databaseConnection *sql.DB) repository.SolutionRepository {
 	return &SolutionRepository{connection: databaseConnection}
 }
+func (repository *SolutionRepository) Delete(id string) (bool, error) {
+	panic("unimplemented")
+}
 
 func (repository *SolutionRepository) fromDatabase(rows *sql.Rows) ([]entity.Solution, error) {
 	var solutionsList []entity.Solution
@@ -38,7 +41,7 @@ func (repository *SolutionRepository) fromDatabase(rows *sql.Rows) ([]entity.Sol
 	return solutionsList, nil
 }
 
-func (repository *SolutionRepository) GetAllSolutionsByProblemId(problemId string) ([]entity.Solution, error) {
+func (repository *SolutionRepository) GetAllByProblemId(problemId string) ([]entity.Solution, error) {
 	query := `SELECT * FROM solution WHERE problem_id = $1`
 	rows, err := repository.connection.Query(query, problemId)
 	if err != nil {
@@ -46,7 +49,7 @@ func (repository *SolutionRepository) GetAllSolutionsByProblemId(problemId strin
 	}
 
 	solutions, err := repository.fromDatabase(rows)
-	if err != nil || len(solutions)==0 {
+	if err != nil || len(solutions) == 0 {
 		return []entity.Solution{}, err
 	}
 
@@ -54,14 +57,14 @@ func (repository *SolutionRepository) GetAllSolutionsByProblemId(problemId strin
 
 }
 
-func (repository *SolutionRepository) GetSolutionById(id string) (*entity.Solution, error) {
+func (repository *SolutionRepository) GetById(id string) (*entity.Solution, error) {
 	query := `SELECT * FROM solution WHERE id = $1`
 	rows, err := repository.connection.Query(query, id)
 	if err != nil {
 		return nil, err
 	}
 	solutions, err := repository.fromDatabase(rows)
-	if err != nil || len(solutions)==0 {
+	if err != nil || len(solutions) == 0 {
 		return nil, err
 	}
 
@@ -69,14 +72,14 @@ func (repository *SolutionRepository) GetSolutionById(id string) (*entity.Soluti
 
 }
 
-func (repository *SolutionRepository) CreateSolution(data *entity.Solution) (*entity.Solution, error) {
+func (repository *SolutionRepository) Create(data *entity.Solution) (*entity.Solution, error) {
 	query := `
 	INSERT INTO solution
 		(id, title, description, estimated_cost, approved, created_at, problem_id, user_id)
 	VALUES
 		($1, $2, $3, $4, $5, $6, $7, $8)
 	`
-	_, err := repository.connection.Query(query, 
+	_, err := repository.connection.Query(query,
 		data.ID,
 		data.Title,
 		data.Description,
@@ -92,8 +95,3 @@ func (repository *SolutionRepository) CreateSolution(data *entity.Solution) (*en
 	return data, nil
 
 }
-
-
-
-
-

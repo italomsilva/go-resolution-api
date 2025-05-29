@@ -35,7 +35,7 @@ func NewCreateSolutionUsecase(
 }
 
 func (usecase *CreateSolutionUsecase) Execute(ctx *gin.Context, input *dto.CreateSolutionRequest) (*entity.Solution, error) {
-	problem, err := usecase.problemRepository.GetProblemById(input.ProblemId)
+	problem, err := usecase.problemRepository.GetById(input.ProblemId)
 	if err != nil || problem == nil {
 		response.SendError(ctx, http.StatusNotFound, "Problem not found")
 		return nil, err
@@ -55,7 +55,7 @@ func (usecase *CreateSolutionUsecase) Execute(ctx *gin.Context, input *dto.Creat
 	newSolution.ProblemId = input.ProblemId
 	newSolution.UserId = userId
 
-	result, err := usecase.solutionRepository.CreateSolution(&newSolution)
+	result, err := usecase.solutionRepository.Create(&newSolution)
 	if err != nil {
 		response.SendError(ctx, http.StatusInternalServerError, "Create Solution error")
 		return nil, err

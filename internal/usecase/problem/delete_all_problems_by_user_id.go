@@ -40,7 +40,7 @@ func (usecase *DeleteAllProblemsByUserIdUsecase) Execute(ctx *gin.Context, userI
 		return nil, fmt.Errorf("unauthorized user")
 	}
 
-	deletedCount, err := usecase.problemRepository.DeleteAllProblemsByUserId(userId)
+	deletedCount, err := usecase.problemRepository.DeleteAllByUserId(userId)
 	if err != nil {
 		response.SendError(ctx, http.StatusInternalServerError, "Error deleting")
 		return nil, err

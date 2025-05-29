@@ -23,7 +23,7 @@ func NewGetUserByIdUsecase(
 
 
 func (usecase *GetUserByIdUsecase) Execute(ctx *gin.Context, id string) (*entity.User, error) {
-	user, err := usecase.userRepository.GetUserById(id)
+	user, err := usecase.userRepository.GetById(id)
 	if err != nil || user == nil {
 		response.SendError(ctx, http.StatusNotFound, "User not found")
 		return nil, err

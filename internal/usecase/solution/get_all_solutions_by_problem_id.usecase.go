@@ -26,11 +26,11 @@ func NewGetAllSolutionsByProblemIdUsecase(
 }
 
 func (usecase *GetAllSolutionsByProblemIdUsecase) Execute(ctx *gin.Context, problemId string) ([]entity.Solution, error) {
-	problem, err := usecase.problemRepository.GetProblemById(problemId)
+	problem, err := usecase.problemRepository.GetById(problemId)
 	if err != nil || problem == nil {
 		response.SendError(ctx, http.StatusNotFound, "Problem not found")
 		return nil, err
 	}
-	result, _ := usecase.solutionRepository.GetAllSolutionsByProblemId(problemId)
+	result, _ := usecase.solutionRepository.GetAllByProblemId(problemId)
 	return result, nil
 }

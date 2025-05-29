@@ -37,7 +37,7 @@ func (userRepository *UserRepository) fromDatabase(rows *sql.Rows) []entity.User
 	return userList
 }
 
-func (userRepository *UserRepository) GetUsers() ([]entity.User, error) {
+func (userRepository *UserRepository) GetAll() ([]entity.User, error) {
 	query := `SELECT * FROM "user"`
 	rows, err := userRepository.connection.Query(query)
 	if err != nil {
@@ -55,7 +55,7 @@ func (userRepository *UserRepository) GetUsers() ([]entity.User, error) {
 	return result, nil
 }
 
-func (userRepository *UserRepository) GetUserById(id string) (*entity.User, error) {
+func (userRepository *UserRepository) GetById(id string) (*entity.User, error) {
 	query := `SELECT * FROM "user" WHERE id = $1`
 	rows, err := userRepository.connection.Query(query, id)
 	if err != nil {
@@ -72,7 +72,7 @@ func (userRepository *UserRepository) GetUserById(id string) (*entity.User, erro
 	return &result[0], nil
 }
 
-func (userRepository *UserRepository) GetUserByLogin(login string) (*entity.User, error) {
+func (userRepository *UserRepository) GetByLogin(login string) (*entity.User, error) {
 	query := `SELECT * FROM "user" WHERE login = $1`
 	rows, err := userRepository.connection.Query(query, login)
 	if err != nil {
@@ -92,7 +92,7 @@ func (userRepository *UserRepository) GetUserByLogin(login string) (*entity.User
 	return &result[0], nil
 }
 
-func (userRepository *UserRepository) GetUserByDocument(document string) (*entity.User, error) {
+func (userRepository *UserRepository) GetByDocument(document string) (*entity.User, error) {
 	query := `SELECT * FROM "user" WHERE document = $1`
 	rows, err := userRepository.connection.Query(query, document)
 	if err != nil {
@@ -112,7 +112,7 @@ func (userRepository *UserRepository) GetUserByDocument(document string) (*entit
 	return &result[0], nil
 }
 
-func (userRepository *UserRepository) CreateUser(data *entity.User) (*entity.User, error) {
+func (userRepository *UserRepository) Create(data *entity.User) (*entity.User, error) {
 	query := `
 	INSERT INTO "user"
 		(id, name, email, document, profile, login, password, token)
@@ -135,7 +135,7 @@ func (userRepository *UserRepository) CreateUser(data *entity.User) (*entity.Use
 	return data, nil
 }
 
-func (userRepository *UserRepository) UpdateUser(id string, data *entity.User) (*entity.User, error) {
+func (userRepository *UserRepository) Update(id string, data *entity.User) (*entity.User, error) {
 	query := `
 	UPDATE "user"
 	SET name = $1,
@@ -169,7 +169,7 @@ func (userRepository *UserRepository) UpdateUser(id string, data *entity.User) (
 
 }
 
-func (userRepository *UserRepository) DeleteUser(id string) (bool, error) {
+func (userRepository *UserRepository) Delete(id string) (bool, error) {
 	query := `DELETE FROM "user" WHERE id = $1`
 
 	_, err := userRepository.connection.Exec(query, id)

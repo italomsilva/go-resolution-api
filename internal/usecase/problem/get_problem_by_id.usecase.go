@@ -23,7 +23,7 @@ func NewGetProblemByIDUsecase(
 
 
 func (usecase *GetProblemByIDUsecase) Execute(ctx *gin.Context, id string) (*entity.Problem, error){
-	result, err := usecase.problemRepository.GetProblemById(id)
+	result, err := usecase.problemRepository.GetById(id)
 	if err != nil {
 		response.SendError(ctx, http.StatusNotFound,"Problem Not Found")
 		return nil, err

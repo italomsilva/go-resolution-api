@@ -36,7 +36,7 @@ func (usecase *GetAllProblemsByUserIdUsecase) Execute(ctx *gin.Context, userId s
 		return problems, fmt.Errorf("authentication required")
 	}
 
-	problems, err := usecase.problemRepository.GetAllProblemsByUserId(userId)
+	problems, err := usecase.problemRepository.GetAllByUserId(userId)
 	if err != nil {
 		response.SendError(ctx, http.StatusInternalServerError, "Fetch Users Failed")
 		return problems, err

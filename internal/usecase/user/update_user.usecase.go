@@ -34,7 +34,7 @@ func (usecase *UpdateUserUsecase) Execute(ctx *gin.Context, input *dto.UpdateUse
 		return nil, nil
 	}
 
-	user, err := usecase.userRepository.GetUserById(userId)
+	user, err := usecase.userRepository.GetById(userId)
 	if user == nil {
 		response.SendError(ctx, http.StatusNotFound, "User Not Found")
 		return nil, err
@@ -45,12 +45,12 @@ func (usecase *UpdateUserUsecase) Execute(ctx *gin.Context, input *dto.UpdateUse
 	}
 
 	if input.Login == nil || *input.Login != "" {
-		foundUserByLogin, _ := usecase.userRepository.GetUserByLogin(*input.Login)
+		foundUserByLogin, _ := usecase.userRepository.GetByLogin(*input.Login)
 		if foundUserByLogin != nil {
 			response.SendError(ctx, http.StatusConflict, "Login already exists")
 			return nil, nil
 		}
 		user.Login = *input.Login
 	}
-	return usecase.userRepository.UpdateUser(userId, user)
+	return usecase.userRepository.Update(userId, user)
 }

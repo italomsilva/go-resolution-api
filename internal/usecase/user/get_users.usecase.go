@@ -18,5 +18,5 @@ func NewGetUsersUsecase(
 }
 
 func (usecase *GetUsersUsecase) Execute() ([]entity.User, error) {
-	return usecase.userRepository.GetUsers()
+	return usecase.userRepository.GetAll()
 }

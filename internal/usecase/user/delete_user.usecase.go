@@ -50,7 +50,7 @@ func (usecase *DeleteUserUsecase) Execute(ctx *gin.Context, input *dto.DeleteUse
 		return &output, err
 	}
 
-	deleteUser, err := usecase.userRepository.DeleteUser(userId)
+	deleteUser, err := usecase.userRepository.Delete(userId)
 	if err != nil {
 		response.SendError(ctx, http.StatusInternalServerError, "user deletion failed")
 	}
