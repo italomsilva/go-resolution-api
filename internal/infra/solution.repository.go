@@ -3,14 +3,15 @@ package infra
 import (
 	"database/sql"
 	"go-resolution-api/internal/domain/entity"
+	"go-resolution-api/internal/domain/repository"
 )
 
 type SolutionRepository struct {
 	connection *sql.DB
 }
 
-func NewSolutionRepository(databaseConnection *sql.DB) SolutionRepository {
-	return SolutionRepository{connection: databaseConnection}
+func NewSolutionRepository(databaseConnection *sql.DB) repository.SolutionRepository {
+	return &SolutionRepository{connection: databaseConnection}
 }
 
 func (repository *SolutionRepository) fromDatabase(rows *sql.Rows) ([]entity.Solution, error) {

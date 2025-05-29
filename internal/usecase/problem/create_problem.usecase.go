@@ -3,6 +3,8 @@ package usecase
 import (
 	"fmt"
 	"go-resolution-api/internal/domain/entity"
+	"go-resolution-api/internal/domain/gateway"
+	"go-resolution-api/internal/domain/repository"
 	dto "go-resolution-api/internal/dto/problem"
 	"go-resolution-api/internal/dto/response"
 	"net/http"
@@ -10,7 +12,25 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (usecase *ProblemUseCase) CreateProblem(ctx *gin.Context, input *dto.CreateProblemRequest) (*entity.Problem, error) {
+type CreateProblemUsecase struct {
+	problemRepository  repository.ProblemRepository
+	tokenGateway       gateway.TokenGateway
+	idGeneratorGateway gateway.IDGeneratorGateway
+}
+
+func NewCreateProblemUsecase(
+	problemRepository repository.ProblemRepository,
+	tokenGateway gateway.TokenGateway,
+	idGeneratorGateway gateway.IDGeneratorGateway,
+) CreateProblemUsecase {
+	return CreateProblemUsecase{
+		problemRepository:  problemRepository,
+		idGeneratorGateway: idGeneratorGateway,
+		tokenGateway:       tokenGateway,
+	}
+}
+
+func (usecase *CreateProblemUsecase) Execute(ctx *gin.Context, input *dto.CreateProblemRequest) (*entity.Problem, error) {
 	problem := entity.NewProblem()
 	id := usecase.idGeneratorGateway.Generate()
 	userId, exists := usecase.tokenGateway.GetUserId(ctx)

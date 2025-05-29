@@ -1,8 +1,22 @@
 package usecase
 
-import "go-resolution-api/internal/domain/entity"
+import (
+	"go-resolution-api/internal/domain/entity"
+	"go-resolution-api/internal/domain/repository"
+)
 
+type GetUsersUsecase struct {
+	userRepository     repository.UserRepository
+}
 
-func (usecase *UserUseCase) GetUsers() ([]entity.User, error) {
+func NewGetUsersUsecase(
+	userRepository repository.UserRepository,
+) GetUsersUsecase {
+	return GetUsersUsecase{
+		userRepository:     userRepository,
+	}
+}
+
+func (usecase *GetUsersUsecase) Execute() ([]entity.User, error) {
 	return usecase.userRepository.GetUsers()
 }

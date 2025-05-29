@@ -2,14 +2,34 @@ package usecase
 
 import (
 	"go-resolution-api/internal/domain/entity"
+	"go-resolution-api/internal/domain/gateway"
+	"go-resolution-api/internal/domain/repository"
 	"go-resolution-api/internal/dto/response"
-	user_dto "go-resolution-api/internal/dto/user"
+	dto "go-resolution-api/internal/dto/user"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
+type LoginUsecase struct {
+	userRepository     repository.UserRepository
+	tokenGateway       gateway.TokenGateway
+	cryptorGateway     gateway.CryptorGateway
+}
 
-func (usecase *UserUseCase) Login(ctx *gin.Context, input *user_dto.LoginRequest) (*entity.User, error) {
+func NewLoginUsecase(
+	userRepository repository.UserRepository,
+	tokenGateway gateway.TokenGateway,
+	cryptorGateway gateway.CryptorGateway,
+) LoginUsecase {
+	return LoginUsecase{
+		userRepository:     userRepository,
+		tokenGateway:       tokenGateway,
+		cryptorGateway:     cryptorGateway,
+	}
+}
+
+
+func (usecase *LoginUsecase) Execute(ctx *gin.Context, input *dto.LoginRequest) (*entity.User, error) {
 	user, _ := usecase.userRepository.GetUserByLogin(input.Login)
 	if user == nil {
 		response.SendError(ctx, http.StatusBadRequest, "Invalid login or password")

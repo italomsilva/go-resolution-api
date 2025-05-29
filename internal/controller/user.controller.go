@@ -11,19 +11,38 @@ import (
 )
 
 type UserController struct {
-	userUseCase  usecase.UserUseCase
-	tokenGateway gateway.TokenGateway
+	tokenGateway       gateway.TokenGateway
+	createUserUsecase  usecase.CreateUserUsecase
+	deleteUserUsecase  usecase.DeleteUserUsecase
+	getUserByIdUsecase usecase.GetUserByIdUsecase
+	getUsersUsecase    usecase.GetUsersUsecase
+	loginUsecase       usecase.LoginUsecase
+	updateUserUsecase  usecase.UpdateUserUsecase
 }
 
-func NewUserController(useCase usecase.UserUseCase, tokenGateway gateway.TokenGateway) UserController {
+func NewUserController(
+	tokenGateway gateway.TokenGateway,
+	createUserUsecase usecase.CreateUserUsecase,
+	deleteUserUsecase usecase.DeleteUserUsecase,
+	getUserByIdUsecase usecase.GetUserByIdUsecase,
+	getUsersUsecase usecase.GetUsersUsecase,
+	loginUsecase usecase.LoginUsecase,
+	updateUserUsecase usecase.UpdateUserUsecase,
+
+) UserController {
 	return UserController{
-		userUseCase: useCase,
 		tokenGateway: tokenGateway,
+		createUserUsecase: createUserUsecase,
+		deleteUserUsecase: deleteUserUsecase,
+		getUserByIdUsecase: getUserByIdUsecase,
+		getUsersUsecase: getUsersUsecase,
+		loginUsecase: loginUsecase,
+		updateUserUsecase: updateUserUsecase,
 	}
 }
 
 func (controller *UserController) GetUsers(ctx *gin.Context) {
-	result, _ := controller.userUseCase.GetUsers()
+	result, _ := controller.getUsersUsecase.Execute()
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")
 	}
@@ -31,7 +50,7 @@ func (controller *UserController) GetUsers(ctx *gin.Context) {
 
 func (controller *UserController) GetUserById(ctx *gin.Context) {
 	id := ctx.Param("id")
-	result, _ := controller.userUseCase.GetUserById(ctx, id)
+	result, _ := controller.getUserByIdUsecase.Execute(ctx, id)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")
 	}
@@ -45,7 +64,7 @@ func (controller *UserController) CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	result, _ := controller.userUseCase.CreateUser(ctx, &input)
+	result, _ := controller.createUserUsecase.Execute(ctx, &input)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusCreated, result, "signUp successfully")
 	}
@@ -59,7 +78,7 @@ func (controller *UserController) Login(ctx *gin.Context) {
 		return
 	}
 
-	result, _ := controller.userUseCase.Login(ctx, &input)
+	result, _ := controller.loginUsecase.Execute(ctx, &input)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "signIn successfully")
 	}
@@ -73,7 +92,7 @@ func (controller *UserController) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	result, _ := controller.userUseCase.UpdateUser(ctx, &input)
+	result, _ := controller.updateUserUsecase.Execute(ctx, &input)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "user updated successfully")
 	}
@@ -87,7 +106,7 @@ func (controller *UserController) DeleteAccount(ctx *gin.Context) {
 		return
 	}
 
-	result, _ := controller.userUseCase.DeleteUser(ctx, &input)
+	result, _ := controller.deleteUserUsecase.Execute(ctx, &input)
 	if result.Success {
 		response.SendSucess(ctx, http.StatusOK, result, "acount deleted successfully")
 	}

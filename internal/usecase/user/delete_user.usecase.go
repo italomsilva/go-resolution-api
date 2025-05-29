@@ -1,24 +1,45 @@
 package usecase
 
 import (
+	"go-resolution-api/internal/domain/gateway"
+	"go-resolution-api/internal/domain/repository"
 	"go-resolution-api/internal/dto/response"
-	"go-resolution-api/internal/dto/user"
+	dto "go-resolution-api/internal/dto/user"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func (usecase *UserUseCase) DeleteUser(ctx *gin.Context, input *dto.DeleteUserRequest) (*dto.DeleteUserResponse, error) {
+type DeleteUserUsecase struct {
+	userRepository repository.UserRepository
+	tokenGateway   gateway.TokenGateway
+	loginUsecase   LoginUsecase
+}
+
+func NewDeleteUserUsecase(
+	userRepository repository.UserRepository,
+	tokenGateway gateway.TokenGateway,
+	loginUsecase LoginUsecase,
+
+) DeleteUserUsecase {
+	return DeleteUserUsecase{
+		userRepository: userRepository,
+		tokenGateway:   tokenGateway,
+		loginUsecase:   loginUsecase,
+	}
+}
+
+func (usecase *DeleteUserUsecase) Execute(ctx *gin.Context, input *dto.DeleteUserRequest) (*dto.DeleteUserResponse, error) {
 	output := dto.DeleteUserResponse{
 		Success: false,
 	}
 
-	inputLogin := dto.LoginRequest {
-		Login: input.Login,
+	inputLogin := dto.LoginRequest{
+		Login:    input.Login,
 		Password: input.Password,
 	}
 
-	userLogin, err := usecase.Login(ctx, &inputLogin)
+	userLogin, err := usecase.loginUsecase.Execute(ctx, &inputLogin)
 	if userLogin == nil {
 		return &output, err
 	}

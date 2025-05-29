@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"fmt"
+	"go-resolution-api/internal/domain/gateway"
+	"go-resolution-api/internal/domain/repository"
 	dto "go-resolution-api/internal/dto/problem"
 	"go-resolution-api/internal/dto/response"
 	"net/http"
@@ -9,7 +11,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (usecase *ProblemUseCase) DeleteAllProblemsByUserId(ctx *gin.Context, userId string) (*dto.DeleteAllProblemsByUserIdResponse, error) {
+type DeleteAllProblemsByUserIdUsecase struct {
+	problemRepository  repository.ProblemRepository
+	tokenGateway       gateway.TokenGateway
+}
+
+func NewDeleteAllProblemsByUserIdUsecase(
+	problemRepository repository.ProblemRepository,
+	tokenGateway gateway.TokenGateway,
+) DeleteAllProblemsByUserIdUsecase {
+	return DeleteAllProblemsByUserIdUsecase{
+		problemRepository:  problemRepository,
+		tokenGateway:       tokenGateway,
+	}
+}
+
+
+func (usecase *DeleteAllProblemsByUserIdUsecase) Execute(ctx *gin.Context, userId string) (*dto.DeleteAllProblemsByUserIdResponse, error) {
 
 	userIdToken, exists := usecase.tokenGateway.GetUserId(ctx)
 	if !exists {

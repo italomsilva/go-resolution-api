@@ -7,28 +7,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitializeProblemsRoutes(
-	problemController *controller.ProblemController,
+func InitializeSolutionRoutes(
+	solutionController *controller.SolutionController,
 	router *gin.Engine,
 	authMiddleware *middleware.AuthMiddleware,
 	apiKeyMiddleware *middleware.ApiKeyMiddleware,
 ) {
-	routes := router.Group("/api")
-	routes.Use(apiKeyMiddleware.Apply())
-	{
-		routes.GET("/problems", problemController.GetAllProblems)
-		routes.GET("/problem/:id", problemController.GetProblemById)
-	}
+	// routes := router.Group("/api")
+	// routes.Use(apiKeyMiddleware.Apply())
+	// {
+	// 	routes.GET("/solutions", solutionController)
+	// 	routes.GET("/solution/:id", solutionController.GetProblemById)
+	// }
 
-	protected := router.Group("/api")
-	protected.Use(apiKeyMiddleware.Apply())
-	protected.Use(authMiddleware.Apply())
-	{
-		protected.POST("/problem", problemController.CreateProblem)
-		protected.PUT("/problem", problemController.UpdateProblem)
-		protected.GET("/problems/user", problemController.GetAllProblemsByUserId)
-		protected.DELETE("/problem", problemController.DeleteProblem)
-		protected.DELETE("/problems/user", problemController.DeleteAllProblemsByUserId)
-	}
+	// protected := router.Group("/api")
+	// protected.Use(apiKeyMiddleware.Apply())
+	// protected.Use(authMiddleware.Apply())
+	// {
+	// 	protected.POST("/solution", solutionController.CreateProblem)
+	// }
 
 }

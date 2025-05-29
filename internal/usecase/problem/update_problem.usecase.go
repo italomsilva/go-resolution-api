@@ -3,6 +3,8 @@ package usecase
 import (
 	"fmt"
 	"go-resolution-api/internal/domain/entity"
+	"go-resolution-api/internal/domain/gateway"
+	"go-resolution-api/internal/domain/repository"
 	dto "go-resolution-api/internal/dto/problem"
 	"go-resolution-api/internal/dto/response"
 	"net/http"
@@ -10,7 +12,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (usecase *ProblemUseCase) UpdateProblem(ctx *gin.Context, input *dto.UpdateProblemRequest) (*entity.Problem, error) {
+type UpdateProblemUsecase struct {
+	problemRepository  repository.ProblemRepository
+	tokenGateway       gateway.TokenGateway
+}
+
+func NewUpdateProblemUsecase(
+	problemRepository repository.ProblemRepository,
+	tokenGateway gateway.TokenGateway,
+) UpdateProblemUsecase {
+	return UpdateProblemUsecase{
+		problemRepository:  problemRepository,
+		tokenGateway:       tokenGateway,
+	}
+}
+
+
+func (usecase *UpdateProblemUsecase) Execute(ctx *gin.Context, input *dto.UpdateProblemRequest) (*entity.Problem, error) {
 	_, exists := usecase.tokenGateway.GetUserId(ctx)
 	if !exists {
 		response.SendError(ctx, http.StatusUnauthorized, "Authentication required")

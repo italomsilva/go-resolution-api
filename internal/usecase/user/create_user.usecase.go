@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"go-resolution-api/internal/domain/entity"
+	"go-resolution-api/internal/domain/gateway"
+	"go-resolution-api/internal/domain/repository"
 	"go-resolution-api/internal/dto/response"
 	dto "go-resolution-api/internal/dto/user"
 	"net/http"
@@ -9,7 +11,28 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (usecase *UserUseCase) CreateUser(ctx *gin.Context, input *dto.CreateUserRequest) (*entity.User, error) {
+type CreateUserUsecase struct {
+	userRepository     repository.UserRepository
+	tokenGateway       gateway.TokenGateway
+	idGeneratorGateway gateway.IDGeneratorGateway
+	cryptorGateway     gateway.CryptorGateway
+}
+
+func NewCreateUserUsecase(
+	userRepository repository.UserRepository,
+	tokenGateway gateway.TokenGateway,
+	idGeneratorGateway gateway.IDGeneratorGateway,
+	cryptorGateway gateway.CryptorGateway,
+) CreateUserUsecase {
+	return CreateUserUsecase{
+		userRepository:     userRepository,
+		tokenGateway:       tokenGateway,
+		idGeneratorGateway: idGeneratorGateway,
+		cryptorGateway:     cryptorGateway,
+	}
+}
+
+func (usecase *CreateUserUsecase) Execute(ctx *gin.Context, input *dto.CreateUserRequest) (*entity.User, error) {
 	createUser := entity.NewUser()
 
 	foundUserLogin, _ := usecase.userRepository.GetUserByLogin(input.Login)

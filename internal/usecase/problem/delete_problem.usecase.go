@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"go-resolution-api/internal/domain/gateway"
+	"go-resolution-api/internal/domain/repository"
 	dto "go-resolution-api/internal/dto/problem"
 	"go-resolution-api/internal/dto/response"
 	"net/http"
@@ -8,7 +10,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (usecase *ProblemUseCase) DeleteProblem(ctx *gin.Context, id string) (*dto.DeleteProblemResponse, error) {
+type DeleteProblemUsecase struct {
+	problemRepository  repository.ProblemRepository
+	tokenGateway       gateway.TokenGateway
+}
+
+func NewDeleteProblemUsecase(
+	problemRepository repository.ProblemRepository,
+	tokenGateway gateway.TokenGateway,
+) DeleteProblemUsecase {
+	return DeleteProblemUsecase{
+		problemRepository:  problemRepository,
+		tokenGateway:       tokenGateway,
+	}
+}
+
+
+func (usecase *DeleteProblemUsecase) Execute(ctx *gin.Context, id string) (*dto.DeleteProblemResponse, error) {
 	
 	problem, err := usecase.problemRepository.GetProblemById(id)
 	if err != nil {

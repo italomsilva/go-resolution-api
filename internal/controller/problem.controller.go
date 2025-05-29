@@ -11,16 +11,40 @@ import (
 )
 
 type ProblemController struct {
-	usecase usecase.ProblemUseCase
-	tokenGateway gateway.TokenGateway
+	tokenGateway                     gateway.TokenGateway
+	createProblemUsecase             usecase.CreateProblemUsecase
+	deleteAllProblemsByUserIdUsecase usecase.DeleteAllProblemsByUserIdUsecase
+	deleteProblemUsecase             usecase.DeleteProblemUsecase
+	getAllProblemsByUserIdUsecase    usecase.GetAllProblemsByUserIdUsecase
+	getAllProblemsUsecase            usecase.GetAllProblemsUsecase
+	getProblemByIDUsecase            usecase.GetProblemByIDUsecase
+	updateProblemUsecase             usecase.UpdateProblemUsecase
 }
 
-func NewProblemController(usecase usecase.ProblemUseCase, tokenGateway gateway.TokenGateway) ProblemController {
-	return ProblemController{usecase: usecase, tokenGateway: tokenGateway}
+func NewProblemController(
+	tokenGateway gateway.TokenGateway,
+	createProblemUsecase usecase.CreateProblemUsecase,
+	deleteAllProblemsByUserIdUsecase usecase.DeleteAllProblemsByUserIdUsecase,
+	deleteProblemUsecase usecase.DeleteProblemUsecase,
+	getAllProblemsByUserIdUsecase usecase.GetAllProblemsByUserIdUsecase,
+	getAllProblemsUsecase usecase.GetAllProblemsUsecase,
+	getProblemByIDUsecase usecase.GetProblemByIDUsecase,
+	updateProblemUsecase usecase.UpdateProblemUsecase,
+) ProblemController {
+	return ProblemController{
+		tokenGateway:                     tokenGateway,
+		createProblemUsecase:             createProblemUsecase,
+		deleteAllProblemsByUserIdUsecase: deleteAllProblemsByUserIdUsecase,
+		deleteProblemUsecase:             deleteProblemUsecase,
+		getAllProblemsByUserIdUsecase:    getAllProblemsByUserIdUsecase,
+		getAllProblemsUsecase:            getAllProblemsUsecase,
+		getProblemByIDUsecase:            getProblemByIDUsecase,
+		updateProblemUsecase:             updateProblemUsecase,
+	}
 }
 
 func (controller *ProblemController) GetAllProblems(ctx *gin.Context) {
-	result, _ := controller.usecase.GetAllProblems()
+	result, _ := controller.getAllProblemsUsecase.Execute()
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")
 	}
@@ -28,7 +52,7 @@ func (controller *ProblemController) GetAllProblems(ctx *gin.Context) {
 
 func (controller *ProblemController) GetProblemById(ctx *gin.Context) {
 	problemId := ctx.Param("id")
-	result, _ := controller.usecase.GetProblemByID(ctx, problemId)
+	result, _ := controller.getProblemByIDUsecase.Execute(ctx, problemId)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")
 	}
@@ -41,7 +65,7 @@ func (controller *ProblemController) CreateProblem(ctx *gin.Context) {
 		response.SendError(ctx, http.StatusBadRequest, "Invalid Request Body")
 		return
 	}
-	result, _ := controller.usecase.CreateProblem(ctx, &body)
+	result, _ := controller.createProblemUsecase.Execute(ctx, &body)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusCreated, result, "")
 	}
@@ -54,7 +78,7 @@ func (controller *ProblemController) UpdateProblem(ctx *gin.Context) {
 		response.SendError(ctx, http.StatusBadRequest, "Invalid Request Body")
 		return
 	}
-	result, _ := controller.usecase.UpdateProblem(ctx, &body)
+	result, _ := controller.updateProblemUsecase.Execute(ctx, &body)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")
 	}
@@ -62,7 +86,7 @@ func (controller *ProblemController) UpdateProblem(ctx *gin.Context) {
 
 func (controller *ProblemController) GetAllProblemsByUserId(ctx *gin.Context) {
 	userId, _ := controller.tokenGateway.GetUserId(ctx)
-	result, err := controller.usecase.GetAllProblemsByUserId(ctx, userId)
+	result, err := controller.getAllProblemsByUserIdUsecase.Execute(ctx, userId)
 	if err == nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")
 	}
@@ -75,7 +99,7 @@ func (controller *ProblemController) DeleteProblem(ctx *gin.Context) {
 		response.SendError(ctx, http.StatusBadRequest, "Invalid Request Body")
 		return
 	}
-	result, _ := controller.usecase.DeleteProblem(ctx, body.ID)
+	result, _ := controller.deleteProblemUsecase.Execute(ctx, body.ID)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")
 	}
@@ -83,7 +107,7 @@ func (controller *ProblemController) DeleteProblem(ctx *gin.Context) {
 
 func (controller *ProblemController) DeleteAllProblemsByUserId(ctx *gin.Context) {
 	userId, _ := controller.tokenGateway.GetUserId(ctx)
-	result, _ := controller.usecase.DeleteAllProblemsByUserId(ctx, userId)
+	result, _ := controller.deleteAllProblemsByUserIdUsecase.Execute(ctx, userId)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")
 	}
