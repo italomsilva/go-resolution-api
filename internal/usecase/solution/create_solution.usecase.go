@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"fmt"
 	"go-resolution-api/internal/domain/entity"
 	"go-resolution-api/internal/domain/gateway"
 	"go-resolution-api/internal/domain/repository"
@@ -41,11 +40,7 @@ func (usecase *CreateSolutionUsecase) Execute(ctx *gin.Context, input *dto.Creat
 		return nil, err
 	}
 
-	userId, exists := usecase.tokenGateway.GetUserId(ctx)
-	if !exists {
-		response.SendError(ctx, http.StatusNotFound, "Authentication required")
-		return nil, fmt.Errorf("authentication required")
-	}
+	userId, _ := usecase.tokenGateway.GetUserId(ctx)
 
 	newSolution := entity.NewSolution()
 	newSolution.ID = usecase.idGeneratorGateway.Generate()

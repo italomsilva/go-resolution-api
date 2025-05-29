@@ -34,11 +34,7 @@ func (usecase *DeleteProblemUsecase) Execute(ctx *gin.Context, id string) (*dto.
 		return nil, err
 	}
 	
-	userIdToken, exists := usecase.tokenGateway.GetUserId(ctx)
-	if !exists {
-		response.SendError(ctx, http.StatusUnauthorized, "Authentication required")
-		return nil, err
-	}
+	userIdToken, _ := usecase.tokenGateway.GetUserId(ctx)
 	
 	if problem.UserID != userIdToken {
 		response.SendError(ctx, http.StatusUnauthorized, "Unauthorized user")

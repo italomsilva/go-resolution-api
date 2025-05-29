@@ -28,12 +28,8 @@ func NewUpdateUserUsecase(
 
 
 func (usecase *UpdateUserUsecase) Execute(ctx *gin.Context, input *dto.UpdateUserRequest) (*entity.User, error) {
-	userId, exists := usecase.tokenGateway.GetUserId(ctx)
-	if !exists {
-		response.SendError(ctx, http.StatusUnauthorized, "Authentication required.")
-		return nil, nil
-	}
-
+	userId, _ := usecase.tokenGateway.GetUserId(ctx)
+	
 	user, err := usecase.userRepository.GetById(userId)
 	if user == nil {
 		response.SendError(ctx, http.StatusNotFound, "User Not Found")

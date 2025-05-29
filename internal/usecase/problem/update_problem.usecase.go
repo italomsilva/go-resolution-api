@@ -29,16 +29,17 @@ func NewUpdateProblemUsecase(
 
 
 func (usecase *UpdateProblemUsecase) Execute(ctx *gin.Context, input *dto.UpdateProblemRequest) (*entity.Problem, error) {
-	_, exists := usecase.tokenGateway.GetUserId(ctx)
-	if !exists {
-		response.SendError(ctx, http.StatusUnauthorized, "Authentication required")
-		return nil, fmt.Errorf("authentication required")
-	}
-
+	userId, _ := usecase.tokenGateway.GetUserId(ctx)
+	
 	problem, err := usecase.problemRepository.GetById(input.ID)
 	if err != nil {
 		response.SendError(ctx, http.StatusNotFound, "Problem Not Found")
 		return nil, err
+	}
+
+	if userId !=  problem.UserID{
+		response.SendError(ctx, http.StatusUnauthorized, "Unauthorized User")
+		return nil, fmt.Errorf("unauthorized user")
 	}
 
 	if input.Title != nil && *input.Title != "" {

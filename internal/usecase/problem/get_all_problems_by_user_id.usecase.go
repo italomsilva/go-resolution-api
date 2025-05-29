@@ -30,10 +30,10 @@ func NewGetAllProblemsByUserIdUsecase(
 func (usecase *GetAllProblemsByUserIdUsecase) Execute(ctx *gin.Context, userId string) ([]entity.Problem, error) {
 	problems := []entity.Problem{}
 
-	userIdToken, exists := usecase.tokenGateway.GetUserId(ctx)
-	if !exists || userIdToken != userId {
-		response.SendError(ctx, http.StatusUnauthorized, "Authentication required")
-		return problems, fmt.Errorf("authentication required")
+	userIdToken, _ := usecase.tokenGateway.GetUserId(ctx)
+	if  userIdToken != userId {
+		response.SendError(ctx, http.StatusUnauthorized, "Unauthorized User")
+		return problems, fmt.Errorf("unauthorized user")
 	}
 
 	problems, err := usecase.problemRepository.GetAllByUserId(userId)
