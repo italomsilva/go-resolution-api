@@ -35,7 +35,7 @@ func (usecase *UpdateSolutionUsecase) Execute(ctx *gin.Context, input *dto.Updat
 	}
 
 	userId, _ := usecase.tokenGateway.GetUserId(ctx)
-	if userId != solution.UserId {
+	if userId != solution.UserID {
 		response.SendError(ctx, http.StatusUnauthorized, "Unauthorized user")
 		return nil, nil
 	}

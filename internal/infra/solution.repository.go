@@ -25,8 +25,8 @@ func (repository *SolutionRepository) fromDatabase(rows *sql.Rows) ([]entity.Sol
 			&solutionObj.EstimatedCost,
 			&solutionObj.Approved,
 			&solutionObj.CreatedAt,
-			&solutionObj.ProblemId,
-			&solutionObj.UserId,
+			&solutionObj.ProblemID,
+			&solutionObj.UserID,
 		)
 		if err != nil {
 			return []entity.Solution{}, err
@@ -83,8 +83,8 @@ func (repository *SolutionRepository) Create(data *entity.Solution) (*entity.Sol
 		data.EstimatedCost,
 		data.Approved,
 		data.CreatedAt,
-		data.ProblemId,
-		data.UserId,
+		data.ProblemID,
+		data.UserID,
 	)
 	if err != nil {
 		return nil, err

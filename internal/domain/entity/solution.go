@@ -9,8 +9,8 @@ type Solution struct {
 	EstimatedCost float32   `json:"estimated_cost"`
 	Approved      bool      `json:"approved"`
 	CreatedAt     time.Time `json:"created_at"`
-	ProblemId     string    `json:"problem_id"`
-	UserId        string    `json:"user_id"`
+	ProblemID     string    `json:"problem_id"`
+	UserID        string    `json:"user_id"`
 }
 
 func NewSolution() Solution {

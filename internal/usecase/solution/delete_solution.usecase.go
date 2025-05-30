@@ -35,7 +35,7 @@ func (usecase *DeleteSolutionUsecase) Execute(ctx *gin.Context, id string) (*dto
 		return nil, err
 	}
 
-	if solution.UserId != userId {
+	if solution.UserID != userId {
 		response.SendError(ctx, http.StatusUnauthorized, "Unauthorized user")
 		return nil, err
 	}
