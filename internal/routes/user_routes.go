@@ -17,7 +17,7 @@ func InitializeUserRoutes(
 	routes.Use(apiKeyMiddleware.Apply())
 	{
 		routes.GET("/users", userController.GetUsers)
-		routes.GET("/user/:id", userController.GetUserById)
+		routes.GET("/user/:userId", userController.GetUserById)
 		routes.POST("/sign-up", userController.CreateUser)
 		routes.POST("/sign-in", userController.Login)
 	}

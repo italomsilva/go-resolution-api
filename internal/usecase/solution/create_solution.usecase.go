@@ -45,7 +45,7 @@ func (usecase *CreateSolutionUsecase) Execute(ctx *gin.Context, input *dto.Creat
 	newSolution := entity.NewSolution()
 	newSolution.ID = usecase.idGeneratorGateway.Generate()
 	newSolution.Title = input.Title
-	newSolution.Description = input.Description
+	newSolution.Description = *input.Description
 	newSolution.EstimatedCost = input.Estimated_cost
 	newSolution.ProblemId = input.ProblemId
 	newSolution.UserId = userId

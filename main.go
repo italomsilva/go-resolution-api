@@ -2,7 +2,7 @@ package main
 
 import (
 	"go-resolution-api/database"
-	"go-resolution-api/internal/di"
+	"go-resolution-api/internal/injection"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -22,7 +22,7 @@ func main() {
 
 	router := gin.Default()
 	
-	di.InjectDependencies(databaseConnection, router)
+	injection.InjectDependencies(databaseConnection, router)
 
 	router.Run(":3060")
 }

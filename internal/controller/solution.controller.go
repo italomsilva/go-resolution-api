@@ -18,6 +18,7 @@ type SolutionController struct {
 	deleteSolutionUsecase                usecase.DeleteSolutionUsecase
 	deleteAllSolutionsByProblemIdUsecase usecase.DeleteAllSolutionsByProblemIdUsecase
 	deleteAllSolutionsByUserIdUsecase    usecase.DeleteAllSolutionsByUserIdUsecase
+	updateSolutionUsecase                usecase.UpdateSolutionUsecase
 }
 
 func NewSolutionController(
@@ -28,6 +29,7 @@ func NewSolutionController(
 	deleteSolutionUsecase usecase.DeleteSolutionUsecase,
 	deleteAllSolutionsByProblemIdUsecase usecase.DeleteAllSolutionsByProblemIdUsecase,
 	deleteAllSolutionsByUserIdUsecase usecase.DeleteAllSolutionsByUserIdUsecase,
+	updateSolutionUsecase usecase.UpdateSolutionUsecase,
 
 ) SolutionController {
 	return SolutionController{
@@ -38,6 +40,7 @@ func NewSolutionController(
 		deleteSolutionUsecase:                deleteSolutionUsecase,
 		deleteAllSolutionsByProblemIdUsecase: deleteAllSolutionsByProblemIdUsecase,
 		deleteAllSolutionsByUserIdUsecase:    deleteAllSolutionsByUserIdUsecase,
+		updateSolutionUsecase:                updateSolutionUsecase,
 	}
 }
 
@@ -67,7 +70,7 @@ func (controller *SolutionController) GetAllSolutionsByProblemId(ctx *gin.Contex
 }
 
 func (controller *SolutionController) GetSolutionById(ctx *gin.Context) {
-	solutionId := ctx.Param("id")
+	solutionId := ctx.Param("solutionId")
 	result, _ := controller.getSolutionByIdUsecase.Execute(ctx, solutionId)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")
@@ -111,5 +114,18 @@ func (controller *SolutionController) DeleteAllSolutionsByUserId(ctx *gin.Contex
 		response.SendSucess(ctx, http.StatusOK, result, "")
 		return
 	}
+}
 
+func (controller *SolutionController) UpdateSolution(ctx *gin.Context) {
+	body := dto.UpdateSolutionRequest{}
+	err := ctx.BindJSON(&body)
+	if err != nil {
+		response.SendError(ctx, http.StatusBadRequest, "Invalid Request Body")
+		return
+	}
+	result, _ := controller.updateSolutionUsecase.Execute(ctx, &body)
+	if result != nil {
+		response.SendSucess(ctx, http.StatusOK, result, "")
+		return
+	}
 }

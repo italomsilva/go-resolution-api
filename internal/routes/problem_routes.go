@@ -17,7 +17,7 @@ func InitializeProblemsRoutes(
 	routes.Use(apiKeyMiddleware.Apply())
 	{
 		routes.GET("/problems", problemController.GetAllProblems)
-		routes.GET("/problem/:id", problemController.GetProblemById)
+		routes.GET("/problem/:problemId", problemController.GetProblemById)
 	}
 
 	protected := router.Group("/api")

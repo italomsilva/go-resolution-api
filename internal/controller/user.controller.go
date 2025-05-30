@@ -49,7 +49,7 @@ func (controller *UserController) GetUsers(ctx *gin.Context) {
 }
 
 func (controller *UserController) GetUserById(ctx *gin.Context) {
-	id := ctx.Param("id")
+	id := ctx.Param("userId")
 	result, _ := controller.getUserByIdUsecase.Execute(ctx, id)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")

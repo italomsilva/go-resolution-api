@@ -51,7 +51,7 @@ func (controller *ProblemController) GetAllProblems(ctx *gin.Context) {
 }
 
 func (controller *ProblemController) GetProblemById(ctx *gin.Context) {
-	problemId := ctx.Param("id")
+	problemId := ctx.Param("problemId")
 	result, _ := controller.getProblemByIDUsecase.Execute(ctx, problemId)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")
