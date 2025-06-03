@@ -77,7 +77,7 @@ func (repository *ProblemSectorRepository) GetAll() ([]entity.ProblemSector, err
 	return result, nil
 }
 
-func (repository *ProblemSectorRepository) GetAllByProblemId(problemID int) ([]entity.ProblemSector, error) {
+func (repository *ProblemSectorRepository) GetAllByProblemId(problemID string) ([]entity.ProblemSector, error) {
 	query := `SELECT * FROM problem_sector WHERE problem_id = $1`
 	rows, err := repository.connection.Query(query, problemID)
 	if err != nil {

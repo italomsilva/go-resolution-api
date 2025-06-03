@@ -30,6 +30,7 @@ func (repository *SectorRepository) fromDatabase(rows *sql.Rows) []entity.Sector
 	}
 	return sectorList
 }
+
 func (repository *SectorRepository) GetAll() ([]entity.Sector, error) {
 	query := `SELECT * FROM sector`
 	rows, err := repository.connection.Query(query)
@@ -52,6 +53,20 @@ func (repository *SectorRepository) GetById(id int) (*entity.Sector, error) {
 	}
 
 	return &result[0], nil
+}
+
+func (repository *SectorRepository) GetAllByProblemId(problemId int) ([]entity.Sector, error) {
+	query := `SELECT * FROM sector WHERE problem_id = $1`
+	rows, err := repository.connection.Query(query, problemId)
+	if err != nil {
+		return nil, err
+	}
+	result := repository.fromDatabase(rows)
+	if len(result) == 0 {
+		return nil, fmt.Errorf("sector not found")
+	}
+
+	return result, nil
 }
 
 func (repository *SectorRepository) GetByIds(idList []int) ([]entity.Sector, error) {

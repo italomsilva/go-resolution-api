@@ -9,6 +9,7 @@ import (
 
 func InitializeProblemsRoutes(
 	problemController *controller.ProblemController,
+	problemSectorController *controller.ProblemSectorController,
 	router *gin.Engine,
 	authMiddleware *middleware.AuthMiddleware,
 	apiKeyMiddleware *middleware.ApiKeyMiddleware,
@@ -18,6 +19,7 @@ func InitializeProblemsRoutes(
 	{
 		routes.GET("/problems", problemController.GetAllProblems)
 		routes.GET("/problem/:problemId", problemController.GetProblemById)
+		routes.GET("/problem/:problemId/sectors", problemSectorController.GetSectorsByProblemID)
 	}
 
 	protected := router.Group("/api")
@@ -29,6 +31,8 @@ func InitializeProblemsRoutes(
 		protected.GET("/problems/user", problemController.GetAllProblemsByUserId)
 		protected.DELETE("/problem", problemController.DeleteProblem)
 		protected.DELETE("/problems/user", problemController.DeleteAllProblemsByUserId)
+		protected.POST("/problem/sector", problemSectorController.CreateProblemSector)
+		protected.DELETE("/problem/sector", problemSectorController.DeleteProblemSector)
 	}
 
 }
