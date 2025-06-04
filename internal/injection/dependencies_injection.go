@@ -3,7 +3,8 @@ package injection
 import (
 	"database/sql"
 	"go-resolution-api/internal/controller"
-	"go-resolution-api/internal/infra"
+	infraGateway "go-resolution-api/internal/infra/gateway"
+	infraRepository "go-resolution-api/internal/infra/repository"
 	"go-resolution-api/internal/middleware"
 	"go-resolution-api/internal/routes"
 	ProblemUsecase "go-resolution-api/internal/usecase/problem"
@@ -12,24 +13,23 @@ import (
 	SolutionUsecase "go-resolution-api/internal/usecase/solution"
 	SolutionReactionUsecase "go-resolution-api/internal/usecase/solution/solution_reaction"
 	UserUsecase "go-resolution-api/internal/usecase/user"
-	"go-resolution-api/pkg"
 
 	"github.com/gin-gonic/gin"
 )
 
 func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 	// gateways
-	tokenGateway := pkg.NewAuthJWTGateway()
-	idGeneratorGateway := pkg.NewUUIDGateway()
-	cryptorGateway := pkg.NewBcryptGateway()
+	tokenGateway := infraGateway.NewAuthJWTGateway()
+	idGeneratorGateway := infraGateway.NewUUIDGateway()
+	cryptorGateway := infraGateway.NewBcryptGateway()
 
 	// repositories
-	problemRepository := infra.NewProblemRepository(databaseConnection)
-	userRepository := infra.NewUserRepository(databaseConnection)
-	solutionRepository := infra.NewSolutionRepository(databaseConnection)
-	sectorRepository := infra.NewSectorRepository(databaseConnection)
-	problemSectorRepository := infra.NewProblemSectorRepository(databaseConnection)
-	solutionReactionRepository := infra.NewSolutionReactionRepository(databaseConnection)
+	problemRepository := infraRepository.NewProblemRepository(databaseConnection)
+	userRepository := infraRepository.NewUserRepository(databaseConnection)
+	solutionRepository := infraRepository.NewSolutionRepository(databaseConnection)
+	sectorRepository := infraRepository.NewSectorRepository(databaseConnection)
+	problemSectorRepository := infraRepository.NewProblemSectorRepository(databaseConnection)
+	solutionReactionRepository := infraRepository.NewSolutionReactionRepository(databaseConnection)
 
 	//problems usecases
 	createProblemUsecase := ProblemUsecase.NewCreateProblemUsecase(problemRepository, tokenGateway, idGeneratorGateway)

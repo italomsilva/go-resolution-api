@@ -1,4 +1,4 @@
-package pkg
+package infra
 
 import (
 	"go-resolution-api/internal/domain/gateway"
