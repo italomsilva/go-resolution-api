@@ -2,6 +2,8 @@ DROP TABLE IF EXISTS problem_sector;
 
 DROP TABLE IF EXISTS solution;
 
+DROP TABLE IF EXISTS solution_reaction;
+
 DROP TABLE IF EXISTS problem;
 
 DROP TABLE IF EXISTS sector;
@@ -58,10 +60,10 @@ CREATE TABLE problem_sector (
 );
 
 CREATE TABLE solution_reaction (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY,
     user_id UUID NOT NULL,
     solution_id UUID NOT NULL,
-    type INT NOT NULL, 
+    reaction_type INT NOT NULL, 
     CONSTRAINT fk_reaction_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
     CONSTRAINT fk_reaction_solution FOREIGN KEY (solution_id) REFERENCES solution(id) ON DELETE CASCADE
 );

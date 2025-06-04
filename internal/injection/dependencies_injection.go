@@ -8,8 +8,9 @@ import (
 	"go-resolution-api/internal/routes"
 	ProblemUsecase "go-resolution-api/internal/usecase/problem"
 	ProblemSectorUsecase "go-resolution-api/internal/usecase/problem/problem_sector"
-	SolutionUsecase "go-resolution-api/internal/usecase/solution"
 	SectorUsecase "go-resolution-api/internal/usecase/sector"
+	SolutionUsecase "go-resolution-api/internal/usecase/solution"
+	SolutionReactionUsecase "go-resolution-api/internal/usecase/solution/solution_reaction"
 	UserUsecase "go-resolution-api/internal/usecase/user"
 	"go-resolution-api/pkg"
 
@@ -28,6 +29,7 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 	solutionRepository := infra.NewSolutionRepository(databaseConnection)
 	sectorRepository := infra.NewSectorRepository(databaseConnection)
 	problemSectorRepository := infra.NewProblemSectorRepository(databaseConnection)
+	solutionReactionRepository := infra.NewSolutionReactionRepository(databaseConnection)
 
 	//problems usecases
 	createProblemUsecase := ProblemUsecase.NewCreateProblemUsecase(problemRepository, tokenGateway, idGeneratorGateway)
@@ -63,6 +65,10 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 	deleteAllSolutionsByProblemIdUsecase := SolutionUsecase.NewDeleteAllSolutionsByProblemIdUsecase(solutionRepository, problemRepository, tokenGateway)
 	deleteAllSolutionsByUserIdUsecase := SolutionUsecase.NewDeleteAllSolutionsByUserIdUsecase(solutionRepository, userRepository)
 	updateSolutionUsecase := SolutionUsecase.NewUpdateSolutionUsecase(solutionRepository, tokenGateway)
+
+	//solutions reactions usecases
+	createSolutionReactionUsecase := SolutionReactionUsecase.NewCreateSolutionReactionUsecase(solutionReactionRepository, solutionRepository, tokenGateway, idGeneratorGateway)
+	deleteSolutionReactionUsecase := SolutionReactionUsecase.NewDeleteSolutionReactionUsecase(solutionReactionRepository, solutionRepository, tokenGateway)
 
 	problemController := controller.NewProblemController(
 		tokenGateway,
@@ -108,12 +114,18 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 		updateSolutionUsecase,
 	)
 
+	solutionReactionController := controller.NewSolutionReactionController(
+		tokenGateway,
+		createSolutionReactionUsecase,
+		deleteSolutionReactionUsecase,
+	)
+
 	authMiddleware := middleware.NewAuthMiddleware(tokenGateway)
 	apiKeyMiddleware := middleware.NewApiKeyMiddleware()
 
 	routes.InitializeUserRoutes(&userController, routerGin, authMiddleware, apiKeyMiddleware)
 	routes.InitializeProblemsRoutes(&problemController, &problemSectorController, routerGin, authMiddleware, apiKeyMiddleware)
-	routes.InitializeSolutionRoutes(&solutionController, routerGin, authMiddleware, apiKeyMiddleware)
+	routes.InitializeSolutionRoutes(&solutionController, &solutionReactionController, routerGin, authMiddleware, apiKeyMiddleware)
 	routes.InitializeSectorRoutes(&sectorController, routerGin, authMiddleware, apiKeyMiddleware)
 
 }

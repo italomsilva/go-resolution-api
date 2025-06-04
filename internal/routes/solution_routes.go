@@ -9,6 +9,7 @@ import (
 
 func InitializeSolutionRoutes(
 	solutionController *controller.SolutionController,
+	solutionReactionController *controller.SolutionReactionController,
 	router *gin.Engine,
 	authMiddleware *middleware.AuthMiddleware,
 	apiKeyMiddleware *middleware.ApiKeyMiddleware,
@@ -29,6 +30,9 @@ func InitializeSolutionRoutes(
 		protected.DELETE("/solution", solutionController.DeleteSolution)
 		protected.DELETE("/solutions/problem", solutionController.DeleteAllSolutionsByProblemId)
 		protected.DELETE("/solutions/user", solutionController.DeleteAllSolutionsByUserId)
+
+		protected.POST("/solution/reaction", solutionReactionController.CreateSolutionReaction)
+		protected.DELETE("/solution/reaction", solutionReactionController.DeleteSolutionReaction)
 	}
 
 }
