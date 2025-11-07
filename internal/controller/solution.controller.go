@@ -11,14 +11,16 @@ import (
 )
 
 type SolutionController struct {
-	tokenGateway                         gateway.TokenGateway
-	createSolutionUsecase                usecase.CreateSolutionUsecase
-	getAllSolutionsByProblemIdUsecase    usecase.GetAllSolutionsByProblemIdUsecase
-	getSolutionByIdUsecase               usecase.GetSolutionByIdUsecase
-	deleteSolutionUsecase                usecase.DeleteSolutionUsecase
-	deleteAllSolutionsByProblemIdUsecase usecase.DeleteAllSolutionsByProblemIdUsecase
-	deleteAllSolutionsByUserIdUsecase    usecase.DeleteAllSolutionsByUserIdUsecase
-	updateSolutionUsecase                usecase.UpdateSolutionUsecase
+	tokenGateway                           gateway.TokenGateway
+	createSolutionUsecase                  usecase.CreateSolutionUsecase
+	getAllSolutionsByProblemIdUsecase      usecase.GetAllSolutionsByProblemIdUsecase
+	getSolutionByIdUsecase                 usecase.GetSolutionByIdUsecase
+	deleteSolutionUsecase                  usecase.DeleteSolutionUsecase
+	deleteAllSolutionsByProblemIdUsecase   usecase.DeleteAllSolutionsByProblemIdUsecase
+	deleteAllSolutionsByUserIdUsecase      usecase.DeleteAllSolutionsByUserIdUsecase
+	updateSolutionUsecase                  usecase.UpdateSolutionUsecase
+	getAllSolutionsByProblemIdToAppUsecase usecase.GetAllSolutionsByProblemIdToAppUsecase
+	getMySolutionsToAppUsecase usecase.GetMySolutionsToAppUsecase
 }
 
 func NewSolutionController(
@@ -30,17 +32,21 @@ func NewSolutionController(
 	deleteAllSolutionsByProblemIdUsecase usecase.DeleteAllSolutionsByProblemIdUsecase,
 	deleteAllSolutionsByUserIdUsecase usecase.DeleteAllSolutionsByUserIdUsecase,
 	updateSolutionUsecase usecase.UpdateSolutionUsecase,
+	getAllSolutionsByProblemIdToAppUsecase usecase.GetAllSolutionsByProblemIdToAppUsecase,
+	getMySolutionsToAppUsecase usecase.GetMySolutionsToAppUsecase,
 
 ) SolutionController {
 	return SolutionController{
-		tokenGateway:                         tokenGateway,
-		createSolutionUsecase:                createSolutionUsecase,
-		getAllSolutionsByProblemIdUsecase:    getAllSolutionsByProblemIdUsecase,
-		getSolutionByIdUsecase:               getSolutionByIdUsecase,
-		deleteSolutionUsecase:                deleteSolutionUsecase,
-		deleteAllSolutionsByProblemIdUsecase: deleteAllSolutionsByProblemIdUsecase,
-		deleteAllSolutionsByUserIdUsecase:    deleteAllSolutionsByUserIdUsecase,
-		updateSolutionUsecase:                updateSolutionUsecase,
+		tokenGateway:                           tokenGateway,
+		createSolutionUsecase:                  createSolutionUsecase,
+		getAllSolutionsByProblemIdUsecase:      getAllSolutionsByProblemIdUsecase,
+		getSolutionByIdUsecase:                 getSolutionByIdUsecase,
+		deleteSolutionUsecase:                  deleteSolutionUsecase,
+		deleteAllSolutionsByProblemIdUsecase:   deleteAllSolutionsByProblemIdUsecase,
+		deleteAllSolutionsByUserIdUsecase:      deleteAllSolutionsByUserIdUsecase,
+		updateSolutionUsecase:                  updateSolutionUsecase,
+		getAllSolutionsByProblemIdToAppUsecase: getAllSolutionsByProblemIdToAppUsecase,
+		getMySolutionsToAppUsecase:            getMySolutionsToAppUsecase,
 	}
 }
 
@@ -129,3 +135,22 @@ func (controller *SolutionController) UpdateSolution(ctx *gin.Context) {
 		return
 	}
 }
+
+func (controller *SolutionController) GetAllSolutionsByProblemIdToApp(ctx *gin.Context) {
+	problemId := ctx.Param("problemId")
+	result, _ := controller.getAllSolutionsByProblemIdToAppUsecase.Execute(ctx, problemId)
+	if result != nil {
+		response.SendSucess(ctx, http.StatusOK, result, "")
+		return
+	}
+
+}
+
+func (controller *SolutionController) GetMySolutionsToApp(ctx *gin.Context) {
+	userId, _ := controller.tokenGateway.GetUserId(ctx)
+	result, _ := controller.getMySolutionsToAppUsecase.Execute(ctx, userId)
+	if result != nil {
+		response.SendSucess(ctx, http.StatusOK, result, "")
+		return
+	}
+}	

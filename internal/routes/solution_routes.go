@@ -33,6 +33,8 @@ func InitializeSolutionRoutes(
 
 		protected.POST("/solution/reaction", solutionReactionController.CreateSolutionReaction)
 		protected.DELETE("/solution/reaction", solutionReactionController.DeleteSolutionReaction)
+		protected.GET("/solutions/problem/app/:problemId", solutionController.GetAllSolutionsByProblemIdToApp)
+		protected.GET("/solutions/user/app", solutionController.GetMySolutionsToApp)
 	}
 
 }

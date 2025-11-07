@@ -19,6 +19,7 @@ type ProblemController struct {
 	getAllProblemsUsecase            usecase.GetAllProblemsUsecase
 	getProblemByIDUsecase            usecase.GetProblemByIDUsecase
 	updateProblemUsecase             usecase.UpdateProblemUsecase
+	getAllProblemsToAppUsecase       usecase.GetAllProblemsToAppUsecase
 }
 
 func NewProblemController(
@@ -30,6 +31,7 @@ func NewProblemController(
 	getAllProblemsUsecase usecase.GetAllProblemsUsecase,
 	getProblemByIDUsecase usecase.GetProblemByIDUsecase,
 	updateProblemUsecase usecase.UpdateProblemUsecase,
+	getAllProblemsToAppUsecase usecase.GetAllProblemsToAppUsecase,
 ) ProblemController {
 	return ProblemController{
 		tokenGateway:                     tokenGateway,
@@ -40,10 +42,18 @@ func NewProblemController(
 		getAllProblemsUsecase:            getAllProblemsUsecase,
 		getProblemByIDUsecase:            getProblemByIDUsecase,
 		updateProblemUsecase:             updateProblemUsecase,
+		getAllProblemsToAppUsecase:       getAllProblemsToAppUsecase,
 	}
 }
 
 func (controller *ProblemController) GetAllProblems(ctx *gin.Context) {
+	result, _ := controller.getAllProblemsUsecase.Execute()
+	if result != nil {
+		response.SendSucess(ctx, http.StatusOK, result, "")
+	}
+}
+
+func (controller *ProblemController) GetAllProblemsToApp(ctx *gin.Context) {
 	result, _ := controller.getAllProblemsUsecase.Execute()
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")

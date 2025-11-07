@@ -39,6 +39,7 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 	getAllProblemsUsecase := ProblemUsecase.NewGetAllProblemsUsecase(problemRepository)
 	getProblemByIdUsecase := ProblemUsecase.NewGetProblemByIDUsecase(problemRepository)
 	updateProblemUsecase := ProblemUsecase.NewUpdateProblemUsecase(problemRepository, tokenGateway)
+	getAllProblemsToAppUsecase := ProblemUsecase.NewGetAllProblemsToAppUsecase(problemRepository, userRepository, solutionRepository)
 
 	//problem sectors usecases
 	createProblemSectorUsecase := ProblemSectorUsecase.NewCreateProblemSectorUsecase(problemSectorRepository, problemRepository, sectorRepository, tokenGateway)
@@ -65,6 +66,8 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 	deleteAllSolutionsByProblemIdUsecase := SolutionUsecase.NewDeleteAllSolutionsByProblemIdUsecase(solutionRepository, problemRepository, tokenGateway)
 	deleteAllSolutionsByUserIdUsecase := SolutionUsecase.NewDeleteAllSolutionsByUserIdUsecase(solutionRepository, userRepository)
 	updateSolutionUsecase := SolutionUsecase.NewUpdateSolutionUsecase(solutionRepository, tokenGateway)
+	getAllSolutionsByProblemIdToAppUsecase := SolutionUsecase.NewGetAllSolutionsByProblemIdToAppUsecase(solutionRepository, problemRepository, solutionReactionRepository, userRepository)
+	getMySolutionsToAppUsecase := SolutionUsecase.NewGetMySolutionsToAppUsecase(solutionRepository, problemRepository, solutionReactionRepository)
 
 	//solutions reactions usecases
 	createSolutionReactionUsecase := SolutionReactionUsecase.NewCreateSolutionReactionUsecase(solutionReactionRepository, solutionRepository, tokenGateway, idGeneratorGateway)
@@ -79,6 +82,7 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 		getAllProblemsUsecase,
 		getProblemByIdUsecase,
 		updateProblemUsecase,
+		getAllProblemsToAppUsecase,
 	)
 
 	problemSectorController := controller.NewProblemSectorController(
@@ -112,6 +116,8 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 		deleteAllSolutionsByProblemIdUsecase,
 		deleteAllSolutionsByUserIdUsecase,
 		updateSolutionUsecase,
+		getAllSolutionsByProblemIdToAppUsecase,
+		getMySolutionsToAppUsecase,
 	)
 
 	solutionReactionController := controller.NewSolutionReactionController(

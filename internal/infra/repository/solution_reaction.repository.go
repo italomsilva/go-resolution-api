@@ -101,3 +101,35 @@ func (repository *SolutionReactionRepository) GetByID(id string) (*entity.Soluti
 
 	return &result[0], nil
 }
+
+func (repository *SolutionReactionRepository) GetReactionsBySolutionIdAndUserId(solutionId string, userId string) (int, int, entity.ReactionType, error) {
+	query := `SELECT * FROM solution_reaction WHERE solution_id = $1`
+
+	rows, err := repository.connection.Query(query, solutionId)
+	if err != nil {
+		return 0, 0, entity.ReactionTypeNone, err
+	}
+
+	result := repository.fromDatabase(rows)
+	if len(result) == 0 {
+		return 0, 0, entity.ReactionTypeNone, nil
+	}
+
+	myReaction := entity.ReactionTypeNone;
+
+	likes := 0
+	dislikes := 0
+
+	for _, reaction := range result {
+		if reaction.ReactionType == entity.ReactionTypeLike {
+			likes++
+		} else if reaction.ReactionType == entity.ReactionTypeDeslike {
+			dislikes++
+		}
+		if reaction.UserID == userId {
+			myReaction = reaction.ReactionType
+		}
+	}
+
+	return likes, dislikes, myReaction, nil
+}

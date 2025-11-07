@@ -32,13 +32,13 @@ func NewLoginUsecase(
 func (usecase *LoginUsecase) Execute(ctx *gin.Context, input *dto.LoginRequest) (*entity.User, error) {
 	user, _ := usecase.userRepository.GetByLogin(input.Login)
 	if user == nil {
-		response.SendError(ctx, http.StatusBadRequest, "Invalid login or password")
+		response.SendError(ctx, http.StatusUnauthorized, "Invalid login or password")
 		return nil, nil
 	}
 
 	comparePasswords := usecase.cryptorGateway.CheckPasswordHash(input.Password, user.Password)
 	if !comparePasswords {
-		response.SendError(ctx, http.StatusBadRequest, "Invalid login or password")
+		response.SendError(ctx, http.StatusUnauthorized, "Invalid login or password")
 		return nil, nil
 	}
 

@@ -8,4 +8,5 @@ type SolutionReactionRepository interface {
 	Create(data *entity.SolutionReaction) (*entity.SolutionReaction, error)
 	Delete(id string) (bool, error)
 	DeleteAllBySolutionId(solutionId string) (int, error)
+	GetReactionsBySolutionIdAndUserId(solutionId string, userId string) (int, int, entity.ReactionType, error)
 }

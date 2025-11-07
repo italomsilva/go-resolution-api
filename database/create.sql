@@ -1,3 +1,5 @@
+CREATE DATABASE resolutionapi;
+
 DROP TABLE IF EXISTS problem_sector;
 
 DROP TABLE IF EXISTS solution;

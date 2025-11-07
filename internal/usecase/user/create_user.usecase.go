@@ -34,6 +34,8 @@ func NewCreateUserUsecase(
 
 func (usecase *CreateUserUsecase) Execute(ctx *gin.Context, input *dto.CreateUserRequest) (*entity.User, error) {
 	createUser := entity.NewUser()
+	createUser.Name = input.Name;
+	createUser.Email = input.Email;
 
 	foundUserLogin, _ := usecase.userRepository.GetByLogin(input.Login)
 	if foundUserLogin != nil {

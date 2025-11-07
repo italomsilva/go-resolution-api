@@ -1,0 +1,98 @@
+{
+  "op": "command",
+  "ns": "myEnergy.readings",
+  "command": {
+    "aggregate": "readings",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": "$recorded_by",
+          "totalReadings": {
+            "$sum": 1
+          },
+          "totalCost": {
+            "$sum": "$estimatedCost"
+          }
+        }
+      },
+      {
+        "$lookup": {
+          "from": "readers",
+          "localField": "_id",
+          "foreignField": "_id",
+          "as": "reader"
+        }
+      },
+      {
+        "$unwind": "$reader"
+      },
+      {
+        "$project": {
+          "_id": 0,
+          "name": "$reader.name",
+          "document": "$reader.document",
+          "email": "$reader.email",
+          "totalReadings": 1,
+          "totalCost": {
+            "$round": [
+              "$totalCost",
+              2
+            ]
+          }
+        }
+      },
+      {
+        "$sort": {
+          "totalReadings": -1
+        }
+      },
+      {
+        "$limit": 3
+      }
+    ],
+    "cursor": {},
+    "lsid": {
+      "id": {
+        "$binary": {
+          "base64": "j0LI6vQ+SO+5RvaC3DznMg==",
+          "subType": "04"
+        }
+      }
+    },
+    "$db": "myEnergy"
+  },
+  "keysExamined": 3,
+  "docsExamined": 35,
+  "hasSortStage": true,
+  "cursorExhausted": true,
+  "numYield": 0,
+  "nreturned": 3,
+  "planCacheShapeHash": "C7D28DA7",
+  "queryHash": "C7D28DA7",
+  "planCacheKey": "EE3B47EB",
+  "queryShapeHash": "28D9CE8499244B8D51871834DCF819772A79FA0080A3F8EDB9206CF171411A95",
+  "queryFramework": "classic",
+  "locks": {
+    "Global": {
+      "acquireCount": {
+        "r": {
+          "$numberLong": "8"
+        }
+      }
+    }
+  },
+  "flowControl": {},
+  "responseLength": 508,
+  "protocol": "op_msg",
+  "cpuNanos": 1203136,
+  "millis": 1,
+  "planSummary": "COLLSCAN",
+  "planningTimeMicros": 484,
+  "ts": {
+    "$date": "2025-06-14T13:42:42.230Z"
+  },
+  "client": "127.0.0.1",
+  "appName": "MongoDB Compass",
+  "allUsers": [],
+  "user": ""
+}

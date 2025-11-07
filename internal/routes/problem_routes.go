@@ -18,6 +18,7 @@ func InitializeProblemsRoutes(
 	routes.Use(apiKeyMiddleware.Apply())
 	{
 		routes.GET("/problems", problemController.GetAllProblems)
+		routes.GET("/problems/app", problemController.GetAllProblemsToApp)
 		routes.GET("/problem/:problemId", problemController.GetProblemById)
 		routes.GET("/problem/:problemId/sectors", problemSectorController.GetSectorsByProblemID)
 	}
