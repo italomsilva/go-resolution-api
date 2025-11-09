@@ -4,14 +4,14 @@ INSERT INTO "user" (id, name, document, profile, login, password, token) VALUES
   ('5fa85f64-5717-4562-b3fc-2c963f66afa6', 'City Hall', '112233445566', 2, 'cityhall', 'senha123', 'token-cityhall'),
   ('6fa85f64-5717-4562-b3fc-2c963f66afa6', 'John Doe', '556677889900', 3, 'johndoe', 'senha123', 'token-johndoe');
 
-INSERT INTO problem (id, title, description, localization) VALUES
+INSERT INTO problem (id, title, description, location) VALUES
   ('a1a1a1a1-1111-1111-1111-111111111111', 'Potholes on Main Street', 'Multiple large potholes causing accidents', 'Main Street, Downtown'),
   ('b2b2b2b2-2222-2222-2222-222222222222', 'Lack of Public Lighting', 'Area is very dark and unsafe at night', '5th Avenue, East Side');
 
 
-INSERT INTO solution (id, title, description, estimated_cost, likes, deslikes, problem_id) VALUES
-  ('c3c3c3c3-3333-3333-3333-333333333333', 'Asphalt Repair', 'Use durable asphalt mix to fill potholes', 15000.00, 10, 2, 'a1a1a1a1-1111-1111-1111-111111111111'),
-  ('d4d4d4d4-4444-4444-4444-444444444444', 'Install LED Street Lights', 'Energy-efficient lighting for safer roads', 22000.00, 25, 1, 'b2b2b2b2-2222-2222-2222-222222222222');
+INSERT INTO solution (id, title, description, estimated_cost, problem_id) VALUES
+  ('c3c3c3c3-3333-3333-3333-333333333333', 'Asphalt Repair', 'Use durable asphalt mix to fill potholes', 15000.00, 'a1a1a1a1-1111-1111-1111-111111111111'),
+  ('d4d4d4d4-4444-4444-4444-444444444444', 'Install LED Street Lights', 'Energy-efficient lighting for safer roads', 22000.00, 'b2b2b2b2-2222-2222-2222-222222222222');
 
 
 INSERT INTO sector (name, description) VALUES

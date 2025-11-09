@@ -33,20 +33,20 @@ func (usecase *GetAllProblemsToAppUsecase) Execute(ctx *gin.Context) ([]dto.GetA
 	result := []dto.GetAllProblemsToAppResponse{}
 	if err != nil {
 		response.SendError(ctx, http.StatusInternalServerError, "Internal Server Error")
-		return result, nil
+		return nil, err
 	}
 
 	for _, problem := range problems {
 		user, err := usecase.userRepository.GetById(problem.UserID)
 		if err != nil {
 			response.SendError(ctx, http.StatusInternalServerError, "User Not found")
-			return result, nil
+			return nil, err
 		}
 
 		solutions, err := usecase.solutionRepository.GetAllByProblemId(problem.ID)
 		if err != nil {
-			response.SendError(ctx, http.StatusInternalServerError, "Internal Server Error")
-			return result, nil
+			response.SendError(ctx, http.StatusInternalServerError, err.Error())
+			return nil, err
 		}
 		solutionsCount := 0
 		solutionsCount = len(solutions)

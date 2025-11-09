@@ -54,7 +54,7 @@ func (controller *ProblemController) GetAllProblems(ctx *gin.Context) {
 }
 
 func (controller *ProblemController) GetAllProblemsToApp(ctx *gin.Context) {
-	result, _ := controller.getAllProblemsUsecase.Execute()
+	result, _ := controller.getAllProblemsToAppUsecase.Execute(ctx)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")
 	}
