@@ -6,7 +6,7 @@ import (
 )
 
 
-type GetAllProblemsToAppResponse struct {
+type GetProblemToAppResponse struct {
 	ID             string               `json:"id"`
 	Title          string               `json:"title"`
 	Description    string               `json:"description"`

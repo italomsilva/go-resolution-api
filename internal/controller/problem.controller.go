@@ -20,6 +20,7 @@ type ProblemController struct {
 	getProblemByIDUsecase            usecase.GetProblemByIDUsecase
 	updateProblemUsecase             usecase.UpdateProblemUsecase
 	getAllProblemsToAppUsecase       usecase.GetAllProblemsToAppUsecase
+	getProblemByIdToAppUsecase    usecase.GetProblemByIdToAppUsecase
 }
 
 func NewProblemController(
@@ -32,6 +33,7 @@ func NewProblemController(
 	getProblemByIDUsecase usecase.GetProblemByIDUsecase,
 	updateProblemUsecase usecase.UpdateProblemUsecase,
 	getAllProblemsToAppUsecase usecase.GetAllProblemsToAppUsecase,
+	getProblemByIdToAppUsecase usecase.GetProblemByIdToAppUsecase,
 ) ProblemController {
 	return ProblemController{
 		tokenGateway:                     tokenGateway,
@@ -43,6 +45,7 @@ func NewProblemController(
 		getProblemByIDUsecase:            getProblemByIDUsecase,
 		updateProblemUsecase:             updateProblemUsecase,
 		getAllProblemsToAppUsecase:       getAllProblemsToAppUsecase,
+		getProblemByIdToAppUsecase:    getProblemByIdToAppUsecase,
 	}
 }
 
@@ -63,6 +66,14 @@ func (controller *ProblemController) GetAllProblemsToApp(ctx *gin.Context) {
 func (controller *ProblemController) GetProblemById(ctx *gin.Context) {
 	problemId := ctx.Param("problemId")
 	result, _ := controller.getProblemByIDUsecase.Execute(ctx, problemId)
+	if result != nil {
+		response.SendSucess(ctx, http.StatusOK, result, "")
+	}
+}
+
+func (controller *ProblemController) GetProblemByIdToApp(ctx *gin.Context) {
+	problemId := ctx.Param("problemId")
+	result, _ := controller.getProblemByIdToAppUsecase.Execute(ctx, problemId)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")
 	}

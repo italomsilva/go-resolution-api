@@ -21,6 +21,7 @@ func InitializeProblemsRoutes(
 		routes.GET("/problems/app", problemController.GetAllProblemsToApp)
 		routes.GET("/problem/:problemId", problemController.GetProblemById)
 		routes.GET("/problem/:problemId/sectors", problemSectorController.GetSectorsByProblemID)
+		routes.GET("/problem/app/:problemId", problemController.GetProblemByIdToApp)
 	}
 
 	protected := router.Group("/api")

@@ -28,9 +28,9 @@ func NewGetAllProblemsToAppUsecase(
 	}
 }
 
-func (usecase *GetAllProblemsToAppUsecase) Execute(ctx *gin.Context) ([]dto.GetAllProblemsToAppResponse, error) {
+func (usecase *GetAllProblemsToAppUsecase) Execute(ctx *gin.Context) ([]dto.GetProblemToAppResponse, error) {
 	problems, err := usecase.problemRepository.GetAll()
-	result := []dto.GetAllProblemsToAppResponse{}
+	result := []dto.GetProblemToAppResponse{}
 	if err != nil {
 		response.SendError(ctx, http.StatusInternalServerError, "Internal Server Error")
 		return nil, err
@@ -54,7 +54,7 @@ func (usecase *GetAllProblemsToAppUsecase) Execute(ctx *gin.Context) ([]dto.GetA
 		userLogin := ""
 		userLogin = user.Login
 
-		problemDto := dto.GetAllProblemsToAppResponse{
+		problemDto := dto.GetProblemToAppResponse{
 			ID:             problem.ID,
 			Title:          problem.Title,
 			Description:    problem.Description,

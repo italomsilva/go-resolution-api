@@ -38,6 +38,7 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 	getAllProblemsByUserIdUsecase := ProblemUsecase.NewGetAllProblemsByUserIdUsecase(problemRepository, tokenGateway)
 	getAllProblemsUsecase := ProblemUsecase.NewGetAllProblemsUsecase(problemRepository)
 	getProblemByIdUsecase := ProblemUsecase.NewGetProblemByIDUsecase(problemRepository)
+	getProblemByIdToAppUsecase := ProblemUsecase.NewGetProblemByIdToAppUsecase(problemRepository, userRepository, solutionRepository)
 	updateProblemUsecase := ProblemUsecase.NewUpdateProblemUsecase(problemRepository, tokenGateway)
 	getAllProblemsToAppUsecase := ProblemUsecase.NewGetAllProblemsToAppUsecase(problemRepository, userRepository, solutionRepository)
 
@@ -83,6 +84,7 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 		getProblemByIdUsecase,
 		updateProblemUsecase,
 		getAllProblemsToAppUsecase,
+		getProblemByIdToAppUsecase,
 	)
 
 	problemSectorController := controller.NewProblemSectorController(
