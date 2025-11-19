@@ -36,11 +36,11 @@ func (usecase *UpdateUserUsecase) Execute(ctx *gin.Context, input *dto.UpdateUse
 		return nil, err
 	}
 
-	if input.Name == nil || *input.Name != "" {
+	if input.Name != nil && *input.Name != "" {
 		user.Name = *input.Name
 	}
 
-	if input.Login == nil || *input.Login != "" {
+	if input.Login != nil && *input.Login != "" {
 		foundUserByLogin, _ := usecase.userRepository.GetByLogin(*input.Login)
 		if foundUserByLogin != nil {
 			response.SendError(ctx, http.StatusConflict, "Login already exists")
