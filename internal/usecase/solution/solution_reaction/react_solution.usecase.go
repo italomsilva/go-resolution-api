@@ -11,21 +11,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CreateSolutionReactionUsecase struct {
+type ReactSolutionUsecase struct {
 	solutionReactionRepository repository.SolutionReactionRepository
 	solutionRepository         repository.SolutionRepository
 	tokenGateway               gateway.TokenGateway
 	idGeneratorGateway         gateway.IDGeneratorGateway
 }
 
-func NewCreateSolutionReactionUsecase(
+func NewReactSolutionUsecase(
 	solutionReactionRepository repository.SolutionReactionRepository,
 	solutionRepository repository.SolutionRepository,
 	tokenGateway gateway.TokenGateway,
 	idGeneratorGateway gateway.IDGeneratorGateway,
 
-) CreateSolutionReactionUsecase {
-	return CreateSolutionReactionUsecase{
+) ReactSolutionUsecase {
+	return ReactSolutionUsecase{
 		solutionReactionRepository: solutionReactionRepository,
 		solutionRepository:         solutionRepository,
 		tokenGateway:               tokenGateway,
@@ -33,7 +33,7 @@ func NewCreateSolutionReactionUsecase(
 	}
 }
 
-func (usecase *CreateSolutionReactionUsecase) Execute(ctx *gin.Context, input *dto.CreateSolutionReactionRequest) (*entity.SolutionReaction, error) {
+func (usecase *ReactSolutionUsecase) Execute(ctx *gin.Context, input *dto.CreateSolutionReactionRequest) (*entity.SolutionReaction, error) {
 	userId, _ := usecase.tokenGateway.GetUserId(ctx)
 
 	solution, err := usecase.solutionRepository.GetById(input.SolutionID)
@@ -42,25 +42,37 @@ func (usecase *CreateSolutionReactionUsecase) Execute(ctx *gin.Context, input *d
 		return nil, err
 	}
 
-	if solution.UserID != userId {
-		response.SendError(ctx, http.StatusUnauthorized, "Unauthorized user")
-		return nil, nil
+	hasReacted, err := usecase.solutionReactionRepository.GetBySolutionIdAndUserId(solution.ID, userId)
+	if err != nil {
+		response.SendError(ctx, http.StatusInternalServerError, "Internal Server Error")
+		return nil, err
 	}
 
-	newId := usecase.idGeneratorGateway.Generate()
-
-	newSolutionReaction := entity.SolutionReaction{
-		ID:           newId,
+	reaction := entity.SolutionReaction{
 		UserID:       userId,
 		SolutionID:   input.SolutionID,
 		ReactionType: input.ReactionType,
 	}
+	
+	if hasReacted == nil {
+		newId := usecase.idGeneratorGateway.Generate()
+		reaction.ID = newId;
 
-	result, err := usecase.solutionReactionRepository.Create(&newSolutionReaction)
-	if err != nil {
-		response.SendError(ctx, http.StatusInternalServerError, "Create Failed")
-		return nil, err
+		result, err := usecase.solutionReactionRepository.Create(&reaction)
+		if err != nil {
+			response.SendError(ctx, http.StatusInternalServerError, "Create Failed")
+			return nil, err
+		}
+
+		return result, nil
+	} else {
+		reaction.ID = hasReacted.ID;
+		_, err := usecase.solutionReactionRepository.Update(hasReacted.ID, reaction);
+		if err != nil {
+			response.SendError(ctx, http.StatusInternalServerError, "Update Failed")
+			return nil, err
+		}
+		return &reaction, nil;
 	}
 
-	return result, nil
 }

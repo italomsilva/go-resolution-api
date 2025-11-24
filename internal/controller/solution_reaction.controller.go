@@ -12,18 +12,18 @@ import (
 
 type SolutionReactionController struct {
 	tokenGateway           gateway.TokenGateway
-	createSolutionReactionUsecase usecase.CreateSolutionReactionUsecase
+	reactSolutionUsecase usecase.ReactSolutionUsecase
 	deleteSolutionReactionUsecase usecase.DeleteSolutionReactionUsecase
 }
 
 func NewSolutionReactionController(
 	tokenGateway gateway.TokenGateway,
-	createSolutionReactionUsecase usecase.CreateSolutionReactionUsecase,
+	reactSolutionUsecase usecase.ReactSolutionUsecase,
 	deleteSolutionReactionUsecase usecase.DeleteSolutionReactionUsecase,
 ) SolutionReactionController {
 	return SolutionReactionController{
 		tokenGateway:           tokenGateway,
-		createSolutionReactionUsecase: createSolutionReactionUsecase,
+		reactSolutionUsecase: reactSolutionUsecase,
 		deleteSolutionReactionUsecase: deleteSolutionReactionUsecase,
 	}
 }
@@ -36,7 +36,7 @@ func (controller *SolutionReactionController) CreateSolutionReaction(ctx *gin.Co
 		return
 	}
 
-	result, _ := controller.createSolutionReactionUsecase.Execute(ctx, &body)
+	result, _ := controller.reactSolutionUsecase.Execute(ctx, &body)
 	if result != nil {
 		response.SendSucess(ctx, http.StatusCreated, result, "")
 	}

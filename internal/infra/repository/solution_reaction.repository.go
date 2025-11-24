@@ -115,7 +115,7 @@ func (repository *SolutionReactionRepository) GetReactionsBySolutionIdAndUserId(
 		return 0, 0, entity.ReactionTypeNone, nil
 	}
 
-	myReaction := entity.ReactionTypeNone;
+	myReaction := entity.ReactionTypeNone
 
 	likes := 0
 	dislikes := 0
@@ -132,4 +132,33 @@ func (repository *SolutionReactionRepository) GetReactionsBySolutionIdAndUserId(
 	}
 
 	return likes, dislikes, myReaction, nil
+}
+
+func (repository *SolutionReactionRepository) GetBySolutionIdAndUserId(solutionId string, userId string) (*entity.SolutionReaction, error) {
+	query := `SELECT * FROM solution_reaction WHERE solution_id = $1 AND user_id = $2`
+
+	rows, err := repository.connection.Query(query, solutionId, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	result := repository.fromDatabase(rows)
+	if len(result) == 0 {
+		return nil, nil
+	}
+
+	return &result[0], nil
+}
+
+func (repository *SolutionReactionRepository) Update(id string, reaction entity.SolutionReaction) (bool, error) {
+	query := `
+	UPDATE solution_reaction
+	SET reaction_type = $1
+	WHERE id = $2`
+
+	_, err := repository.connection.Exec(query, reaction.ReactionType, id)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
