@@ -69,6 +69,7 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 	updateSolutionUsecase := SolutionUsecase.NewUpdateSolutionUsecase(solutionRepository, tokenGateway)
 	getAllSolutionsByProblemIdToAppUsecase := SolutionUsecase.NewGetAllSolutionsByProblemIdToAppUsecase(solutionRepository, problemRepository, solutionReactionRepository, userRepository, tokenGateway)
 	getMySolutionsToAppUsecase := SolutionUsecase.NewGetMySolutionsToAppUsecase(solutionRepository, problemRepository, solutionReactionRepository)
+	approveSolutionUsecase := SolutionUsecase.NewApproveSolutionUsecase(solutionRepository, problemRepository, tokenGateway)
 
 	//solutions reactions usecases
 	createSolutionReactionUsecase := SolutionReactionUsecase.NewReactSolutionUsecase(solutionReactionRepository, solutionRepository, tokenGateway, idGeneratorGateway)
@@ -120,6 +121,7 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 		updateSolutionUsecase,
 		getAllSolutionsByProblemIdToAppUsecase,
 		getMySolutionsToAppUsecase,
+		approveSolutionUsecase,
 	)
 
 	solutionReactionController := controller.NewSolutionReactionController(

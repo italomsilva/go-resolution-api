@@ -20,7 +20,8 @@ type SolutionController struct {
 	deleteAllSolutionsByUserIdUsecase      usecase.DeleteAllSolutionsByUserIdUsecase
 	updateSolutionUsecase                  usecase.UpdateSolutionUsecase
 	getAllSolutionsByProblemIdToAppUsecase usecase.GetAllSolutionsByProblemIdToAppUsecase
-	getMySolutionsToAppUsecase usecase.GetMySolutionsToAppUsecase
+	getMySolutionsToAppUsecase             usecase.GetMySolutionsToAppUsecase
+	approveSolutionUsecase                 usecase.ApproveSolutionUsecase
 }
 
 func NewSolutionController(
@@ -34,6 +35,7 @@ func NewSolutionController(
 	updateSolutionUsecase usecase.UpdateSolutionUsecase,
 	getAllSolutionsByProblemIdToAppUsecase usecase.GetAllSolutionsByProblemIdToAppUsecase,
 	getMySolutionsToAppUsecase usecase.GetMySolutionsToAppUsecase,
+	approveSolutionUsecase usecase.ApproveSolutionUsecase,
 
 ) SolutionController {
 	return SolutionController{
@@ -46,7 +48,8 @@ func NewSolutionController(
 		deleteAllSolutionsByUserIdUsecase:      deleteAllSolutionsByUserIdUsecase,
 		updateSolutionUsecase:                  updateSolutionUsecase,
 		getAllSolutionsByProblemIdToAppUsecase: getAllSolutionsByProblemIdToAppUsecase,
-		getMySolutionsToAppUsecase:            getMySolutionsToAppUsecase,
+		getMySolutionsToAppUsecase:             getMySolutionsToAppUsecase,
+		approveSolutionUsecase:                 approveSolutionUsecase,
 	}
 }
 
@@ -153,4 +156,18 @@ func (controller *SolutionController) GetMySolutionsToApp(ctx *gin.Context) {
 		response.SendSucess(ctx, http.StatusOK, result, "")
 		return
 	}
-}	
+}
+
+func (controller *SolutionController) ApproveSolution(ctx *gin.Context) {
+	body := dto.ApproveSolutionRequest{}
+	err := ctx.BindJSON(&body)
+	if err != nil {
+		response.SendError(ctx, http.StatusBadRequest, "Invalid Request Body")
+		return
+	}
+	result, _ := controller.approveSolutionUsecase.Execute(ctx, &body)
+	if result {
+		response.SendSucess(ctx, http.StatusOK, result, "")
+		return
+	}
+}
