@@ -33,7 +33,7 @@ func (repository *SolutionReactionRepository) fromDatabase(rows *sql.Rows) []ent
 
 func (repository *SolutionReactionRepository) Create(data *entity.SolutionReaction) (*entity.SolutionReaction, error) {
 	query := `
-	INSERT INTO solution_reation
+	INSERT INTO solution_reaction
 		(id, user_id, solution_id, reaction_type)
 	VALUES
 		($1, $2, $3, $4)`

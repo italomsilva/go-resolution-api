@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"go-resolution-api/internal/domain/gateway"
 	"go-resolution-api/internal/domain/repository"
 	"go-resolution-api/internal/dto/response"
 	dto "go-resolution-api/internal/dto/solution"
@@ -14,6 +15,7 @@ type GetAllSolutionsByProblemIdToAppUsecase struct {
 	problemRepository          repository.ProblemRepository
 	solutionReactionRepository repository.SolutionReactionRepository
 	userRepository             repository.UserRepository
+	tokenGateway               gateway.TokenGateway
 }
 
 func NewGetAllSolutionsByProblemIdToAppUsecase(
@@ -21,6 +23,7 @@ func NewGetAllSolutionsByProblemIdToAppUsecase(
 	problemRepository repository.ProblemRepository,
 	solutionReactionRepository repository.SolutionReactionRepository,
 	userRepository repository.UserRepository,
+	tokenGateway gateway.TokenGateway,
 
 ) GetAllSolutionsByProblemIdToAppUsecase {
 	return GetAllSolutionsByProblemIdToAppUsecase{
@@ -28,6 +31,7 @@ func NewGetAllSolutionsByProblemIdToAppUsecase(
 		problemRepository:          problemRepository,
 		solutionReactionRepository: solutionReactionRepository,
 		userRepository:             userRepository,
+		tokenGateway:               tokenGateway,
 	}
 }
 
@@ -37,6 +41,8 @@ func (usecase *GetAllSolutionsByProblemIdToAppUsecase) Execute(ctx *gin.Context,
 		response.SendError(ctx, http.StatusNotFound, "Problem not found")
 		return nil, err
 	}
+	userID, _ := usecase.tokenGateway.GetUserId(ctx)
+
 	result := []dto.GetAllSolutionsByProblemIdToAAppResponse{}
 	solutions, _ := usecase.solutionRepository.GetAllByProblemId(problemId)
 	for _, solution := range solutions {
@@ -45,7 +51,7 @@ func (usecase *GetAllSolutionsByProblemIdToAppUsecase) Execute(ctx *gin.Context,
 			response.SendError(ctx, http.StatusInternalServerError, "User Not found")
 			return result, nil
 		}
-		likes, dislikes, myReaction, err := usecase.solutionReactionRepository.GetReactionsBySolutionIdAndUserId(solution.ID, solution.UserID)
+		likes, dislikes, myReaction, err := usecase.solutionReactionRepository.GetReactionsBySolutionIdAndUserId(solution.ID, userID)
 		if err != nil {
 			response.SendError(ctx, http.StatusInternalServerError, "Internal Server Error")
 			return result, nil
