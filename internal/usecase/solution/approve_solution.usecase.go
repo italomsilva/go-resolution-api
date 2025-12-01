@@ -50,7 +50,7 @@ func (usecase *ApproveSolutionUsecase) Execute(ctx *gin.Context, input *dto.Appr
 		return false, err
 	}
 
-	problem.Status = entity.ProblemStatusInProgress
+	problem.Status = entity.ProblemStatusResolved
 	_, err = usecase.problemRepository.Update(problem.ID, problem)
 	if err != nil {
 		response.SendError(ctx, http.StatusInternalServerError, "Update Problem error")

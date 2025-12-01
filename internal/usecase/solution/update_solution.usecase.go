@@ -52,11 +52,10 @@ func (usecase *UpdateSolutionUsecase) Execute(ctx *gin.Context, input *dto.Updat
 		solution.EstimatedCost = *input.EstimatedCost
 	}
 
-	result, err := usecase.solutionRepository.Create(solution)
+	result, err := usecase.solutionRepository.Update(solution.ID,solution)
 	if err != nil {
 		response.SendError(ctx, http.StatusInternalServerError, "Update Solution error")
 		return nil, err
-
 	}
 	return result, nil
 }
