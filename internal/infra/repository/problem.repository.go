@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go-resolution-api/internal/domain/entity"
 	"go-resolution-api/internal/domain/repository"
+	dto "go-resolution-api/internal/dto/problem"
 )
 
 type ProblemRepository struct {
@@ -150,4 +151,48 @@ func (problemRepository *ProblemRepository) DeleteAllByUserId(userId string) (in
 	}
 
 	return int(deletedCounter), nil
+}
+
+func (problemRepository *ProblemRepository) GetStatsCountProblemStatus(userID string) ([]dto.StatsCountProblemStatusResponse, error) {
+	query := `
+    SELECT
+        COUNT(id) AS count,
+        status
+    FROM
+        problem
+    WHERE
+        user_id = $1
+    GROUP BY
+        status
+    ORDER BY
+        status;
+    `
+
+	rows, err := problemRepository.connection.Query(query, userID)
+	if err != nil {
+		return []dto.StatsCountProblemStatusResponse{}, err
+	}
+	defer rows.Close()
+	var statsList []dto.StatsCountProblemStatusResponse
+
+	for rows.Next() {
+		var count int64
+		var status int
+		err := rows.Scan(&count, &status)
+		if err != nil {
+			return []dto.StatsCountProblemStatusResponse{}, err
+		}
+
+		statsObj := dto.StatsCountProblemStatusResponse{
+			Count:  int(count),
+			Status: entity.ProblemStatus(status),
+		}
+		statsList = append(statsList, statsObj)
+	}
+
+	if err := rows.Err(); err != nil {
+		return []dto.StatsCountProblemStatusResponse{}, err
+	}
+
+	return statsList, nil
 }

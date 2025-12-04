@@ -35,6 +35,7 @@ func InitializeProblemsRoutes(
 		protected.DELETE("/problems/user", problemController.DeleteAllProblemsByUserId)
 		protected.POST("/problem/sector", problemSectorController.CreateProblemSector)
 		protected.DELETE("/problem/sector", problemSectorController.DeleteProblemSector)
+		protected.GET("/problem/stats/problem-status", problemController.StatsCountProblemStatus)
 	}
 
 }

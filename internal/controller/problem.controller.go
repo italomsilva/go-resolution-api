@@ -5,6 +5,7 @@ import (
 	dto "go-resolution-api/internal/dto/problem"
 	"go-resolution-api/internal/dto/response"
 	usecase "go-resolution-api/internal/usecase/problem"
+	usecaseStats "go-resolution-api/internal/usecase/problem/stats"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,7 +21,8 @@ type ProblemController struct {
 	getProblemByIDUsecase            usecase.GetProblemByIDUsecase
 	updateProblemUsecase             usecase.UpdateProblemUsecase
 	getAllProblemsToAppUsecase       usecase.GetAllProblemsToAppUsecase
-	getProblemByIdToAppUsecase    usecase.GetProblemByIdToAppUsecase
+	getProblemByIdToAppUsecase       usecase.GetProblemByIdToAppUsecase
+	statsCountProblemStatusUsecase   usecaseStats.StatsCountProblemStatusUsecase
 }
 
 func NewProblemController(
@@ -34,6 +36,8 @@ func NewProblemController(
 	updateProblemUsecase usecase.UpdateProblemUsecase,
 	getAllProblemsToAppUsecase usecase.GetAllProblemsToAppUsecase,
 	getProblemByIdToAppUsecase usecase.GetProblemByIdToAppUsecase,
+	statsCountProblemStatusUsecase usecaseStats.StatsCountProblemStatusUsecase,
+
 ) ProblemController {
 	return ProblemController{
 		tokenGateway:                     tokenGateway,
@@ -45,7 +49,8 @@ func NewProblemController(
 		getProblemByIDUsecase:            getProblemByIDUsecase,
 		updateProblemUsecase:             updateProblemUsecase,
 		getAllProblemsToAppUsecase:       getAllProblemsToAppUsecase,
-		getProblemByIdToAppUsecase:    getProblemByIdToAppUsecase,
+		getProblemByIdToAppUsecase:       getProblemByIdToAppUsecase,
+		statsCountProblemStatusUsecase:   statsCountProblemStatusUsecase,
 	}
 }
 
@@ -130,6 +135,14 @@ func (controller *ProblemController) DeleteAllProblemsByUserId(ctx *gin.Context)
 	userId, _ := controller.tokenGateway.GetUserId(ctx)
 	result, _ := controller.deleteAllProblemsByUserIdUsecase.Execute(ctx, userId)
 	if result != nil {
+		response.SendSucess(ctx, http.StatusOK, result, "")
+	}
+}
+
+func (controller *ProblemController) StatsCountProblemStatus(ctx *gin.Context) {
+	userId, _ := controller.tokenGateway.GetUserId(ctx)
+	result, err := controller.statsCountProblemStatusUsecase.Execute(ctx, userId)
+	if err == nil {
 		response.SendSucess(ctx, http.StatusOK, result, "")
 	}
 }

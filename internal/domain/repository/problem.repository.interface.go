@@ -1,6 +1,9 @@
 package repository
 
-import "go-resolution-api/internal/domain/entity"
+import (
+	"go-resolution-api/internal/domain/entity"
+	dto "go-resolution-api/internal/dto/problem"
+)
 
 type ProblemRepository interface {
 	GetAll() ([]entity.Problem, error)
@@ -10,4 +13,5 @@ type ProblemRepository interface {
 	Update(id string, data *entity.Problem) (*entity.Problem, error)
 	Delete(id string) (bool, error)
 	DeleteAllByUserId(userId string) (int, error)
+	GetStatsCountProblemStatus(userID string) ([]dto.StatsCountProblemStatusResponse, error)
 }

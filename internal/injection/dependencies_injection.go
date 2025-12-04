@@ -9,6 +9,7 @@ import (
 	"go-resolution-api/internal/routes"
 	ProblemUsecase "go-resolution-api/internal/usecase/problem"
 	ProblemSectorUsecase "go-resolution-api/internal/usecase/problem/problem_sector"
+	ProblemStatsUsecase "go-resolution-api/internal/usecase/problem/stats"
 	SectorUsecase "go-resolution-api/internal/usecase/sector"
 	SolutionUsecase "go-resolution-api/internal/usecase/solution"
 	SolutionReactionUsecase "go-resolution-api/internal/usecase/solution/solution_reaction"
@@ -41,6 +42,7 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 	getProblemByIdToAppUsecase := ProblemUsecase.NewGetProblemByIdToAppUsecase(problemRepository, userRepository, solutionRepository)
 	updateProblemUsecase := ProblemUsecase.NewUpdateProblemUsecase(problemRepository, tokenGateway)
 	getAllProblemsToAppUsecase := ProblemUsecase.NewGetAllProblemsToAppUsecase(problemRepository, userRepository, solutionRepository)
+	statsCountProblemStatusUsecase := ProblemStatsUsecase.NewStatsCountProblemStatusUsecase(problemRepository, tokenGateway)
 
 	//problem sectors usecases
 	createProblemSectorUsecase := ProblemSectorUsecase.NewCreateProblemSectorUsecase(problemSectorRepository, problemRepository, sectorRepository, tokenGateway)
@@ -86,6 +88,7 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 		updateProblemUsecase,
 		getAllProblemsToAppUsecase,
 		getProblemByIdToAppUsecase,
+		statsCountProblemStatusUsecase,
 	)
 
 	problemSectorController := controller.NewProblemSectorController(
