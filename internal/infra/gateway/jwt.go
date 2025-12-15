@@ -25,7 +25,7 @@ func NewAuthJWTGateway() gateway.TokenGateway {
 func (authJWTGateway *AuthJWTGateway) Generate(userID string) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": userID,
-		"exp":     time.Now().Add(10 * time.Minute).Unix(),
+		"exp":     time.Now().Add(30 * 24 * time.Hour),
 		"iat":     time.Now().Unix(),
 	}
 
@@ -72,4 +72,3 @@ func (authJWTGateway *AuthJWTGateway) GetUserId(ctx *gin.Context) (string, bool)
 	return userId, true
 
 }
-
