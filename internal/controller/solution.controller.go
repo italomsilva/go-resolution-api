@@ -5,6 +5,7 @@ import (
 	"go-resolution-api/internal/dto/response"
 	dto "go-resolution-api/internal/dto/solution"
 	usecase "go-resolution-api/internal/usecase/solution"
+	usecaseStats "go-resolution-api/internal/usecase/solution/stats"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,6 +23,7 @@ type SolutionController struct {
 	getAllSolutionsByProblemIdToAppUsecase usecase.GetAllSolutionsByProblemIdToAppUsecase
 	getMySolutionsToAppUsecase             usecase.GetMySolutionsToAppUsecase
 	approveSolutionUsecase                 usecase.ApproveSolutionUsecase
+	statsCountSolutionsReactionsUsecase    usecaseStats.StatsCountSolutionsReactionsUsecase
 }
 
 func NewSolutionController(
@@ -36,6 +38,7 @@ func NewSolutionController(
 	getAllSolutionsByProblemIdToAppUsecase usecase.GetAllSolutionsByProblemIdToAppUsecase,
 	getMySolutionsToAppUsecase usecase.GetMySolutionsToAppUsecase,
 	approveSolutionUsecase usecase.ApproveSolutionUsecase,
+	statsCountSolutionsReactionsUsecase usecaseStats.StatsCountSolutionsReactionsUsecase,
 
 ) SolutionController {
 	return SolutionController{
@@ -50,6 +53,7 @@ func NewSolutionController(
 		getAllSolutionsByProblemIdToAppUsecase: getAllSolutionsByProblemIdToAppUsecase,
 		getMySolutionsToAppUsecase:             getMySolutionsToAppUsecase,
 		approveSolutionUsecase:                 approveSolutionUsecase,
+		statsCountSolutionsReactionsUsecase:    statsCountSolutionsReactionsUsecase,
 	}
 }
 
@@ -171,3 +175,12 @@ func (controller *SolutionController) ApproveSolution(ctx *gin.Context) {
 		return
 	}
 }
+
+func (controller *SolutionController) StatsCountSolutionsReactions(ctx *gin.Context) {
+	result, _ := controller.statsCountSolutionsReactionsUsecase.Execute(ctx)
+	if result != nil {
+		response.SendSucess(ctx, http.StatusOK, result, "")
+		return
+	}
+}
+

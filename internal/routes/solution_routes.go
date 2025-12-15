@@ -37,6 +37,8 @@ func InitializeSolutionRoutes(
 		protected.GET("/solutions/user/app", solutionController.GetMySolutionsToApp)
 
 		protected.PUT("/solution/approve", solutionController.ApproveSolution)
+
+		protected.GET("/solution/stats/solutions-reactions", solutionController.StatsCountSolutionsReactions)
 	}
 
 }

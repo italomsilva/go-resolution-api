@@ -80,7 +80,7 @@ go run main.go
 
 6. Acesse a API
 
-A API estará disponível em http://localhost:3060. Utilize ferramentas como Postman ou Insomnia para interagir com a API.
+A API estará disponível em http://localhost:3060/api. Utilize ferramentas como Postman ou Insomnia para interagir com a API.
 Em toda requisição adicione dois headers: um com o nome 'go-api-key' e o valor definido no arquivo.env, e outro chamado 'req-token' e adicione 'Bearer ' antes do valor do token que você receberá ao se registrar ou fazer login. ou seja 'Bearer **_token_**'
 
 

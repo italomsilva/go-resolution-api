@@ -12,6 +12,7 @@ import (
 	ProblemStatsUsecase "go-resolution-api/internal/usecase/problem/stats"
 	SectorUsecase "go-resolution-api/internal/usecase/sector"
 	SolutionUsecase "go-resolution-api/internal/usecase/solution"
+	SolutionStats "go-resolution-api/internal/usecase/solution/stats"
 	SolutionReactionUsecase "go-resolution-api/internal/usecase/solution/solution_reaction"
 	UserUsecase "go-resolution-api/internal/usecase/user"
 
@@ -72,6 +73,7 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 	getAllSolutionsByProblemIdToAppUsecase := SolutionUsecase.NewGetAllSolutionsByProblemIdToAppUsecase(solutionRepository, problemRepository, solutionReactionRepository, userRepository, tokenGateway)
 	getMySolutionsToAppUsecase := SolutionUsecase.NewGetMySolutionsToAppUsecase(solutionRepository, problemRepository, solutionReactionRepository)
 	approveSolutionUsecase := SolutionUsecase.NewApproveSolutionUsecase(solutionRepository, problemRepository, tokenGateway)
+	statsCountSolutionsReactionsUsecase := SolutionStats.NewStatsCountSolutionsReactionsUsecase(solutionReactionRepository, solutionRepository, tokenGateway)
 
 	//solutions reactions usecases
 	createSolutionReactionUsecase := SolutionReactionUsecase.NewReactSolutionUsecase(solutionReactionRepository, solutionRepository, tokenGateway, idGeneratorGateway)
@@ -125,6 +127,7 @@ func InjectDependencies(databaseConnection *sql.DB, routerGin *gin.Engine) {
 		getAllSolutionsByProblemIdToAppUsecase,
 		getMySolutionsToAppUsecase,
 		approveSolutionUsecase,
+		statsCountSolutionsReactionsUsecase,
 	)
 
 	solutionReactionController := controller.NewSolutionReactionController(
